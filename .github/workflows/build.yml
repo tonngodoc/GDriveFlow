@@ -1,0 +1,67 @@
+name: Build GDrive Flow Binaries (Windows & macOS)
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Build Windows Executable
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install customtkinter requests gdown Pillow pyinstaller
+
+    - name: Build Windows EXE
+      run: |
+        python build_exe.py
+
+    - name: Upload Windows Executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: GDriveFlow-Windows
+        path: GDriveFlow.exe
+
+  build-macos:
+    name: Build macOS Binary
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip3 install customtkinter requests gdown Pillow pyinstaller
+
+    - name: Build macOS Binary
+      run: |
+        python3 build_mac.py
+
+    - name: Make executable runnable
+      run: |
+        chmod +x dist/GDriveFlow
+
+    - name: Upload macOS Binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: GDriveFlow-macOS
+        path: dist/GDriveFlow

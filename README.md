@@ -8,12 +8,20 @@
 
 ---
 
+## 📦 Tải Xuống Ứng Dụng Chạy Trực Tiếp (Pre-compiled Binaries)
+
+Bạn có thể tải ngay file thực thi chạy trực tiếp không cần cài đặt Python hay chạy lệnh build:
+
+- 💻 **Windows**: Tải file [`GDriveFlow.exe`](https://github.com/tonngodoc/GDriveFlow/raw/main/GDriveFlow.exe) (Bấm đúp để chạy trực tiếp trên Windows).
+- 🍏 **macOS**: Tải file binary `GDriveFlow` dành cho máy Mac từ mục **[GitHub Actions Artifacts / Releases](https://github.com/tonngodoc/GDriveFlow/actions)** (Tự động biên dịch sẵn cho Mac Apple Silicon & Intel).
+
+---
+
 ## ✨ Tính Năng Nổi Bật (Phiên Bản v2.2.1)
 
 1. **Hỗ Trợ Đa Nền Tảng (Windows & macOS)**:
-   - Mã nguồn được tối ưu tương thích 100% trên cả Windows và **macOS** (Apple Silicon M1/M2/M3 & Intel Mac).
-   - Tự động nhận diện hệ điều hành và xử lý icon cửa sổ chuẩn xác (`set_window_icon`).
-   - Bổ sung kịch bản đóng gói ứng dụng macOS riêng biệt (`build_mac.py`).
+   - Mã nguồn tương thích 100% trên cả Windows và **macOS** (Apple Silicon M1/M2/M3 & Intel Mac).
+   - Tích hợp **GitHub Actions Workflow** tự động biên dịch và đóng gói ứng dụng cho macOS và Windows ngay trên Cloud.
 2. **Giao Diện Phẳng Loại Bỏ Đường Viền Khung**:
    - Loại bỏ hoàn toàn đường viền khung (`border_width=0`) cho từng dòng tệp/thư mục trong danh sách, chỉ giữ lại màu nền phẳng mềm mại, hiện đại và vô cùng thoáng mắt.
 3. **Mặc Định Thu Gọn Cây Thư Mục Tránh Lag**:
@@ -47,21 +55,21 @@ Nếu ứng dụng **GDrive Flow** giúp ích cho bạn, bạn có thể ủng h
 
 ---
 
-## 🚀 Hướng Dẫn Chạy & Đóng Gói
+## 🚀 Hướng Dẫn Chạy & Tự Đóng Gói (Dành cho Developer)
 
-### 1. Chạy mã nguồn Python (Windows / macOS)
+### 1. Chạy mã nguồn Python
 ```bash
 python main.py
 ```
 
-### 2. Đóng gói ứng dụng trên Windows (.exe)
+### 2. Tự đóng gói ứng dụng trên Windows (.exe)
 ```bash
 python build_exe.py
 ```
 Output: `GDriveFlow.exe`.
 
-### 3. Đóng gói ứng dụng trên macOS (.app / binary)
+### 3. Tự đóng gói ứng dụng trên macOS (Binary / .app)
 ```bash
 python build_mac.py
 ```
-Output: `dist/GDriveFlow` hoặc `GDriveFlow_mac`.
+Output: `dist/GDriveFlow`.
