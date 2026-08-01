@@ -2,7 +2,7 @@
 
 **Phát triển bởi TÔN NGỘ ĐỘC (Developed by TON NGO DOC)**
 
-Ứng dụng Windows Desktop thuần giúp tự động tải xuống danh sách tệp hoặc toàn bộ thư mục (folder) trên Google Drive về máy tính cá nhân mà **KHÔNG CẦN ĐĂNG NHẬP GOOGLE**.
+Ứng dụng Windows Desktop thuần giúp tự động tải xuống danh sách tệp hoặc toàn bộ thư mục (folder) trên Google Drive về máy tính cá nhân.
 
 ---
 
@@ -43,7 +43,7 @@
 - **v1.1.0**:
   - Chuyển sang Light Theme (giao diện màu sáng).
 - **v1.0.0**:
-  - Tải tự động folder/file qua thư viện `gdown` không cần đăng nhập Google OAuth.
+  - Tải tự động folder/file qua thư viện `gdown`.
 
 ---
 
