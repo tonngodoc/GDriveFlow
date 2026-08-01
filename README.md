@@ -1,4 +1,4 @@
-# 🌊 GDrive Flow (v2.1.1) - Windows Desktop Application
+# 🌊 GDrive Flow (v2.1.2) - Windows Desktop Application
 
 ![GDrive Flow Logo](icon.png)
 
@@ -8,26 +8,25 @@
 
 ---
 
-## ✨ Tính Năng Nổi Bật (Phiên Bản v2.1.1)
+## ✨ Tính Năng Nổi Bật (Phiên Bản v2.1.2)
 
-1. **Khử URL Thư Viện Bên Thứ 3 & Chuẩn Hóa Lỗi**:
+1. **Hiển Thị Trạng Thái Real-Time 100% Cây Thư Mục**:
+   - Khắc phục triệt để lỗi không hiện trạng thái file khi chưa bấm xổ thư mục.
+   - Mặc định mở rộng cây thư mục (*Expanded tree view*) ngay sau khi quét, giúp mọi thẻ trạng thái (Pending, 🔵 Downloading, ✅ Completed, ❌ Error) hiển thị trực tiếp.
+   - Tự động tính toán và hiển thị thẻ tiến trình thời gian thực cho thư mục cha (ví dụ `🔵 3/10` -> `✅ 10/10`).
+2. **Khử URL Thư Viện Bên Thứ 3 & Chuẩn Hóa Lỗi**:
    - Tự động lọc và khử toàn bộ đường dẫn link thư viện bên thứ 3 (như `wkentaro/gdown`) ra khỏi thông báo lỗi.
    - Bổ sung gợi ý khắc phục chi tiết hướng dẫn mở quyền chia sẻ Google Drive (*"Bất kỳ ai có liên kết đều có thể xem"*).
-2. **Cập Nhật Thông Tin Donate Chính Thức**:
+3. **Cập Nhật Thông Tin Donate Chính Thức**:
    - Nút **`💖 Donate`** hiển thị cửa sổ ủng hộ tác giả qua ngân hàng **TPBank**.
    - **Chủ tài khoản**: `Nguyen Ngoc Thai Ha` | **STK**: `64608121989` kèm nút sao chép tự động.
-3. **Biểu Tượng Icon Cờ Song Ngữ (Flag Icons)**:
+4. **Biểu Tượng Icon Cờ Song Ngữ (Flag Icons)**:
    - Tích hợp icon **Cờ Việt Nam** (`🇻🇳`) & **Cờ Anh Quốc** (`🇬🇧`) sắc nét trên thanh công cụ chuyển đổi ngôn ngữ.
-4. **Lịch Sử Cập Nhật Tương Tác (Interactive Version Changelog)**:
+5. **Lịch Sử Cập Nhật Tương Tác (Interactive Version Changelog)**:
    - Bấm trực tiếp vào nhãn **Phiên Bản (Version Badge)** trên ứng dụng để mở cửa sổ xem toàn bộ lịch sử nâng cấp ứng dụng.
-5. **Tính Năng Báo Lỗi Ứng Dụng (Interactive Bug Report)**:
+6. **Tính Năng Báo Lỗi Ứng Dụng (Interactive Bug Report)**:
    - Nút **`🐛 Báo Lỗi`** (**`🐛 Report Bug`**) mở popup báo cáo sự cố trực tiếp.
    - Hỗ trợ sao chép toàn bộ nhật ký lỗi (Error Logs) và liên kết nhanh đến **GitHub Issues**.
-6. **Chuẩn Hóa Song Ngữ 100% (100% Full Bilingual VI/EN)**:
-   - Dịch toàn bộ nhật ký hệ thống (Logs Console), nhãn trạng thái cây thư mục, thẻ tiến trình (Badge), và các hộp thoại thông báo sang Tiếng Anh hoàn chỉnh khi chuyển đổi ngôn ngữ.
-7. **Khắc Phục Lỗi Dừng Tải & Treo Đơ Giao Diện (Instant Cancellation & Unblocking)**:
-   - Sử dụng lớp ngoại lệ đặc biệt `DownloadCancelledException` thoát lập tức khỏi vòng lặp tải `gdown` mà không bị gdown thử lại trong vô hạn.
-   - Khi bấm **`🛑 Dừng Tải`**, giao diện lập tức phản hồi và mở lại các nút chức năng trong 0.001s, không gây đơ treo ứng dụng.
 
 ---
 
@@ -45,23 +44,17 @@ Nếu ứng dụng **GDrive Flow** giúp ích cho bạn, bạn có thể ủng h
 
 ## 📋 Lịch Sử Phiên Bản (Changelog)
 
-- **v2.1.1 (Hiện tại)**:
+- **v2.1.2 (Hiện tại)**:
+  - Sửa triệt để lỗi không hiển thị trạng thái file real-time trong cây thư mục.
+  - Mặc định mở rộng cây thư mục (Expanded tree view) giúp mọi trạng thái file hiển thị trực tiếp 100%.
+  - Tự động đồng bộ và hiển thị thẻ tiến trình thời gian thực cho thư mục cha (ví dụ `🔵 3/10` -> `✅ 10/10`).
+- **v2.1.1**:
   - Khử toàn bộ link bên thứ 3 (`wkentaro/gdown`) trong thông báo lỗi.
   - Bổ sung hướng dẫn mở quyền chia sẻ Google Drive ('Bất kỳ ai có liên kết đều có thể xem').
 - **v2.1.0**:
   - Cập nhật thông tin Donate: Chủ tài khoản `Nguyen Ngoc Thai Ha`, STK `64608121989`.
   - Tích hợp biểu tượng icon **Cờ Việt Nam** & **Cờ Anh Quốc** sắc nét trên thanh chuyển ngôn ngữ.
   - Thêm tính năng bấm vào nhãn Phiên bản (Version Badge) để xem Lịch sử cập nhật (Changelog) tương tác.
-- **v2.0.0**:
-  - Cập nhật chính thức URL Repository: `https://github.com/tonngodoc/GDriveFlow`.
-  - Tích hợp nút **`💖 Donate`** hiển thị thông tin ngân hàng TPBank.
-- **v1.9.0**:
-  - Đổi tên chính thức thành **GDrive Flow**.
-  - Thiết kế và tích hợp Logo thương hiệu mới.
-  - Rút gọn nút chuyển ngôn ngữ chỉ hiển thị lá cờ (`🇻🇳` / `🇬🇧`).
-- **v1.8.0**:
-  - Thêm tính năng **`🐛 Báo Lỗi`** (`Bug Report`) tích hợp copy log và mở GitHub Issues.
-  - Dịch toàn bộ Nhật ký (Logs), Cây thư mục (Folder tree), Trạng thái (Badges) và Thông báo sang tiếng Anh chuẩn xác 100%.
 
 ---
 

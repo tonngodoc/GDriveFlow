@@ -12,7 +12,7 @@ from gdrive_service import GDriveService, GDriveItem, DownloadCancelledException
 
 # Application Metadata
 APP_NAME = "GDrive Flow"
-APP_VERSION = "v2.1.1"
+APP_VERSION = "v2.1.2"
 DEVELOPER_NAME_VI = "Phát triển bởi TÔN NGỘ ĐỘC"
 DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
 
@@ -20,7 +20,14 @@ DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
 CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release History)
 
 --------------------------------------------------
-📌 Phiên Bản v2.1.1 (Hiện tại)
+📌 Phiên Bản v2.1.2 (Hiện tại)
+--------------------------------------------------
+- ⚡ Sửa triệt để lỗi không hiển thị trạng thái file real-time trong cây thư mục.
+- 📂 Mặc định mở rộng cây thư mục (Expanded tree view) giúp mọi trạng thái file hiển thị trực tiếp 100%.
+- 📊 Đồng bộ thẻ tiến trình hiển thị thời gian thực cho thư mục cha (ví dụ 🔵 3/10 -> ✅ 10/10).
+
+--------------------------------------------------
+📌 Phiên Bản v2.1.1
 --------------------------------------------------
 - 🧹 Lọc và khử toàn bộ đường dẫn link thư viện bên thứ 3 (như wkentaro/gdown) khỏi thông báo lỗi.
 - 💡 Bổ sung gợi ý khắc phục chi tiết khi tệp/thư mục chưa mở quyền chia sẻ 'Bất kỳ ai có liên kết đều có thể xem'.
@@ -71,7 +78,14 @@ CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release Hist
 CHANGELOG_TEXT_EN = """🌊 GDrive Flow - Version Release History
 
 --------------------------------------------------
-📌 Version v2.1.1 (Current)
+📌 Version v2.1.2 (Current)
+--------------------------------------------------
+- ⚡ Fixed real-time file status badge display bug across all tree levels.
+- 📂 Enabled default expanded tree view so every file status is 100% visible immediately.
+- 📊 Real-time parent folder progress badges (e.g. 🔵 3/10 -> ✅ 10/10).
+
+--------------------------------------------------
+📌 Version v2.1.1
 --------------------------------------------------
 - 🧹 Filtered and stripped third-party repository URLs (like wkentaro/gdown) from all error messages.
 - 💡 Added clear troubleshooting advice for restricted Google Drive folders ('Anyone with the link can view').
@@ -315,7 +329,7 @@ class TreeNode:
         
         # State tracking
         self.var_checked = ctk.BooleanVar(value=True)
-        self.expanded = False  # Collapsed by default for ultra performance & lazy loading
+        self.expanded = True  # Expanded by default so all rows & badges render and update live!
         self.status = "pending"  # 'pending', 'downloading', 'completed', 'error', 'paused'
         self.status_text = ""
         self.progress_value = 0.0  # 0.0 to 1.0
@@ -1240,7 +1254,7 @@ class GDriveApp(ctk.CTk):
         self.log(self.t("log_tree_rendered").format(count=total_files))
 
         for top_child in root_node.children:
-            self._render_single_node_widget(top_child, depth=0)
+            self._render_subtree_lazy(top_child, depth=0)
 
         self._update_tree_count_label()
 
@@ -1394,6 +1408,49 @@ class GDriveApp(ctk.CTk):
         )
         self.lbl_val_overall.configure(text=f"{len(selected_files)}/{total_files} {self.t('file_unit')}")
 
+    def _apply_single_node_style(self, node: TreeNode, status: str, status_text: str):
+        bg_color = "#ffffff"
+        border_color = "#e2e8f0"
+        badge_fg = "transparent"
+        text_col = "#0f172a"
+
+        if status == "completed":
+            bg_color = "#d4edda"
+            border_color = "#c3e6cb"
+            badge_fg = "#28a745"
+            text_col = "#ffffff"
+            if not status_text:
+                status_text = self.t("completed_badge")
+        elif status == "error":
+            bg_color = "#f8d7da"
+            border_color = "#f5c6cb"
+            badge_fg = "#dc3545"
+            text_col = "#ffffff"
+            if not status_text:
+                status_text = self.t("error_badge")
+        elif status == "paused":
+            bg_color = "#fff3cd"
+            border_color = "#ffeeba"
+            badge_fg = "#ffc107"
+            text_col = "#000000"
+            if not status_text:
+                status_text = self.t("paused_badge")
+        elif status == "downloading":
+            bg_color = "#e0f2fe"
+            border_color = "#bae6fd"
+            badge_fg = "#0284c7"
+            text_col = "#ffffff"
+
+        if node.frame_widget and node.frame_widget.winfo_exists():
+            node.frame_widget.configure(fg_color=bg_color, border_color=border_color)
+
+        if node.lbl_status_badge and node.lbl_status_badge.winfo_exists():
+            node.lbl_status_badge.configure(
+                text=f" {status_text} " if status_text else "",
+                fg_color=badge_fg,
+                text_color=text_col
+            )
+
     def _update_node_status_ui(self, node: TreeNode, status: str, status_text: str, progress_val: float = 0.0):
         """Updates in-place node status text & background color directly in O(1) time."""
         def _update():
@@ -1401,44 +1458,34 @@ class GDriveApp(ctk.CTk):
             node.status_text = status_text
             node.progress_value = progress_val
 
-            bg_color = "#ffffff"
-            border_color = "#e2e8f0"
-            badge_fg = "transparent"
-            text_col = "#0f172a"
+            self._apply_single_node_style(node, status, status_text)
 
-            if node.status == "completed":
-                bg_color = "#d4edda"
-                border_color = "#c3e6cb"
-                badge_fg = "#28a745"
-                text_col = "#ffffff"
-                status_text = self.t("completed_badge")
-            elif node.status == "error":
-                bg_color = "#f8d7da"
-                border_color = "#f5c6cb"
-                badge_fg = "#dc3545"
-                text_col = "#ffffff"
-                status_text = self.t("error_badge")
-            elif node.status == "paused":
-                bg_color = "#fff3cd"
-                border_color = "#ffeeba"
-                badge_fg = "#ffc107"
-                text_col = "#000000"
-                status_text = self.t("paused_badge")
-            elif node.status == "downloading":
-                bg_color = "#e0f2fe"
-                border_color = "#bae6fd"
-                badge_fg = "#0284c7"
-                text_col = "#ffffff"
+            # Also update parent folder status badges in real-time!
+            curr_parent = node.parent
+            while curr_parent and curr_parent.is_folder:
+                all_leaf_files = curr_parent.get_all_file_nodes()
+                total_count = len(all_leaf_files)
+                if total_count > 0:
+                    completed_count = sum(1 for f in all_leaf_files if f.status == "completed")
+                    error_count = sum(1 for f in all_leaf_files if f.status == "error")
+                    downloading_count = sum(1 for f in all_leaf_files if f.status == "downloading")
 
-            if node.frame_widget and node.frame_widget.winfo_exists():
-                node.frame_widget.configure(fg_color=bg_color, border_color=border_color)
+                    if completed_count == total_count:
+                        curr_parent.status = "completed"
+                        parent_badge = f"✅ {completed_count}/{total_count}"
+                    elif error_count > 0:
+                        curr_parent.status = "error"
+                        parent_badge = f"❌ {completed_count}/{total_count}"
+                    elif downloading_count > 0 or completed_count > 0:
+                        curr_parent.status = "downloading"
+                        parent_badge = f"🔵 {completed_count}/{total_count}"
+                    else:
+                        curr_parent.status = "pending"
+                        parent_badge = ""
 
-            if node.lbl_status_badge and node.lbl_status_badge.winfo_exists():
-                node.lbl_status_badge.configure(
-                    text=f" {status_text} " if status_text else "",
-                    fg_color=badge_fg,
-                    text_color=text_col
-                )
+                    self._apply_single_node_style(curr_parent, curr_parent.status, parent_badge)
+
+                curr_parent = curr_parent.parent
 
         self.after(0, _update)
 
