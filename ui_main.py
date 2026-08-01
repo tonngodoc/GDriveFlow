@@ -325,6 +325,27 @@ class TreeNode:
         return total
 
 
+def set_window_icon(window):
+    """Safely sets window icon for Windows and macOS cross-platform compatibility."""
+    icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
+    png_path = os.path.join(os.path.dirname(__file__), "icon.png")
+
+    if sys.platform == "win32" and os.path.exists(icon_path):
+        try:
+            window.iconbitmap(icon_path)
+            return
+        except Exception:
+            pass
+
+    if os.path.exists(png_path):
+        try:
+            from PIL import ImageTk
+            img = ImageTk.PhotoImage(Image.open(png_path))
+            window.wm_iconphoto(True, img)
+        except Exception:
+            pass
+
+
 class GDriveApp(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -333,13 +354,8 @@ class GDriveApp(ctk.CTk):
         self.geometry("980x830")
         self.minsize(850, 680)
 
-        # Set Window Icon
-        icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
-        if os.path.exists(icon_path):
-            try:
-                self.iconbitmap(icon_path)
-            except Exception:
-                pass
+        # Set Window Icon (Cross-Platform Windows/macOS)
+        set_window_icon(self)
 
         # Active Language State ('vi' or 'en')
         self.current_lang = "vi"
@@ -812,12 +828,7 @@ class GDriveApp(ctk.CTk):
         dialog.grab_set()
 
         # Set dialog icon if available
-        icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
-        if os.path.exists(icon_path):
-            try:
-                dialog.iconbitmap(icon_path)
-            except Exception:
-                pass
+        set_window_icon(dialog)
 
         lbl_title = ctk.CTkLabel(
             dialog,
@@ -877,12 +888,7 @@ class GDriveApp(ctk.CTk):
         dialog.grab_set()
 
         # Set dialog icon if available
-        icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
-        if os.path.exists(icon_path):
-            try:
-                dialog.iconbitmap(icon_path)
-            except Exception:
-                pass
+        set_window_icon(dialog)
 
         lbl_title = ctk.CTkLabel(
             dialog,
@@ -975,12 +981,7 @@ class GDriveApp(ctk.CTk):
         dialog.grab_set()
 
         # Set dialog icon if available
-        icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
-        if os.path.exists(icon_path):
-            try:
-                dialog.iconbitmap(icon_path)
-            except Exception:
-                pass
+        set_window_icon(dialog)
 
         lbl_title = ctk.CTkLabel(
             dialog,
