@@ -1,0 +1,13 @@
+# PyInstaller Build Caches & Binaries
+build/
+dist/
+__pycache__/
+*.spec
+*.pyc
+
+# Local binary outputs (Optional git ignore if building locally)
+# DriveFlow.exe
+
+# OS generated files
+.DS_Store
+Thumbs.db
