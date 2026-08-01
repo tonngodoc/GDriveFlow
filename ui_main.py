@@ -33,7 +33,7 @@ CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release Hist
   • Chủ tài khoản: Nguyen Ngoc Thai Ha
   • Số tài khoản (STK): 64608121989
 - 🇻🇳🇬🇧 Tích hợp biểu tượng icon Cờ Việt Nam & Cờ Anh Quốc sắc nét trên thanh chuyển ngôn ngữ.
-- 🛈 Bấm vào nhãn Phiên bản (Version Badge) để xem nhật ký cập nhật ứng dụng trực tiếp.""" animate:true,StartLine:15,TargetContent:
+- 🛈 Bấm vào nhãn Phiên bản (Version Badge) để xem nhật ký cập nhật ứng dụng trực tiếp.
 
 --------------------------------------------------
 📌 Phiên Bản v2.0.0
