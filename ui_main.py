@@ -12,7 +12,7 @@ from gdrive_service import GDriveService, GDriveItem, DownloadCancelledException
 
 # Application Metadata
 APP_NAME = "GDrive Flow"
-APP_VERSION = "v2.1.0"
+APP_VERSION = "v2.1.1"
 DEVELOPER_NAME_VI = "Phát triển bởi TÔN NGỘ ĐỘC"
 DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
 
@@ -20,14 +20,20 @@ DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
 CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release History)
 
 --------------------------------------------------
-📌 Phiên Bản v2.1.0 (Hiện tại)
+📌 Phiên Bản v2.1.1 (Hiện tại)
+--------------------------------------------------
+- 🧹 Lọc và khử toàn bộ đường dẫn link thư viện bên thứ 3 (như wkentaro/gdown) khỏi thông báo lỗi.
+- 💡 Bổ sung gợi ý khắc phục chi tiết khi tệp/thư mục chưa mở quyền chia sẻ 'Bất kỳ ai có liên kết đều có thể xem'.
+
+--------------------------------------------------
+📌 Phiên Bản v2.1.0
 --------------------------------------------------
 - 💳 Cập nhật thông tin Donate chính thức:
   • Ngân hàng: TPBank (Ngân hàng Tiên Phong)
   • Chủ tài khoản: Nguyen Ngoc Thai Ha
   • Số tài khoản (STK): 64608121989
 - 🇻🇳🇬🇧 Tích hợp biểu tượng icon Cờ Việt Nam & Cờ Anh Quốc sắc nét trên thanh chuyển ngôn ngữ.
-- 🛈 Bấm vào nhãn Phiên bản (Version Badge) để xem nhật ký cập nhật ứng dụng trực tiếp.
+- 🛈 Bấm vào nhãn Phiên bản (Version Badge) để xem nhật ký cập nhật ứng dụng trực tiếp.""" animate:true,StartLine:15,TargetContent:
 
 --------------------------------------------------
 📌 Phiên Bản v2.0.0
@@ -65,7 +71,13 @@ CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release Hist
 CHANGELOG_TEXT_EN = """🌊 GDrive Flow - Version Release History
 
 --------------------------------------------------
-📌 Version v2.1.0 (Current)
+📌 Version v2.1.1 (Current)
+--------------------------------------------------
+- 🧹 Filtered and stripped third-party repository URLs (like wkentaro/gdown) from all error messages.
+- 💡 Added clear troubleshooting advice for restricted Google Drive folders ('Anyone with the link can view').
+
+--------------------------------------------------
+📌 Version v2.1.0
 --------------------------------------------------
 - 💳 Updated official Donate info:
   • Bank: TPBank (Tiên Phong Bank)

@@ -1,4 +1,4 @@
-# 🌊 GDrive Flow (v2.1.0) - Windows Desktop Application
+# 🌊 GDrive Flow (v2.1.1) - Windows Desktop Application
 
 ![GDrive Flow Logo](icon.png)
 
@@ -8,25 +8,26 @@
 
 ---
 
-## ✨ Tính Năng Nổi Bật (Phiên Bản v2.1.0)
+## ✨ Tính Năng Nổi Bật (Phiên Bản v2.1.1)
 
-1. **Cập Nhật Thông Tin Donate Chính Thức**:
+1. **Khử URL Thư Viện Bên Thứ 3 & Chuẩn Hóa Lỗi**:
+   - Tự động lọc và khử toàn bộ đường dẫn link thư viện bên thứ 3 (như `wkentaro/gdown`) ra khỏi thông báo lỗi.
+   - Bổ sung gợi ý khắc phục chi tiết hướng dẫn mở quyền chia sẻ Google Drive (*"Bất kỳ ai có liên kết đều có thể xem"*).
+2. **Cập Nhật Thông Tin Donate Chính Thức**:
    - Nút **`💖 Donate`** hiển thị cửa sổ ủng hộ tác giả qua ngân hàng **TPBank**.
    - **Chủ tài khoản**: `Nguyen Ngoc Thai Ha` | **STK**: `64608121989` kèm nút sao chép tự động.
-2. **Biểu Tượng Icon Cờ Song Ngữ (Flag Icons)**:
+3. **Biểu Tượng Icon Cờ Song Ngữ (Flag Icons)**:
    - Tích hợp icon **Cờ Việt Nam** (`🇻🇳`) & **Cờ Anh Quốc** (`🇬🇧`) sắc nét trên thanh công cụ chuyển đổi ngôn ngữ.
-3. **Lịch Sử Cập Nhật Tương Tác (Interactive Version Changelog)**:
+4. **Lịch Sử Cập Nhật Tương Tác (Interactive Version Changelog)**:
    - Bấm trực tiếp vào nhãn **Phiên Bản (Version Badge)** trên ứng dụng để mở cửa sổ xem toàn bộ lịch sử nâng cấp ứng dụng.
-4. **Tính Năng Báo Lỗi Ứng Dụng (Interactive Bug Report)**:
+5. **Tính Năng Báo Lỗi Ứng Dụng (Interactive Bug Report)**:
    - Nút **`🐛 Báo Lỗi`** (**`🐛 Report Bug`**) mở popup báo cáo sự cố trực tiếp.
    - Hỗ trợ sao chép toàn bộ nhật ký lỗi (Error Logs) và liên kết nhanh đến **GitHub Issues**.
-5. **Chuẩn Hóa Song Ngữ 100% (100% Full Bilingual VI/EN)**:
+6. **Chuẩn Hóa Song Ngữ 100% (100% Full Bilingual VI/EN)**:
    - Dịch toàn bộ nhật ký hệ thống (Logs Console), nhãn trạng thái cây thư mục, thẻ tiến trình (Badge), và các hộp thoại thông báo sang Tiếng Anh hoàn chỉnh khi chuyển đổi ngôn ngữ.
-6. **Khắc Phục Lỗi Dừng Tải & Treo Đơ Giao Diện (Instant Cancellation & Unblocking)**:
+7. **Khắc Phục Lỗi Dừng Tải & Treo Đơ Giao Diện (Instant Cancellation & Unblocking)**:
    - Sử dụng lớp ngoại lệ đặc biệt `DownloadCancelledException` thoát lập tức khỏi vòng lặp tải `gdown` mà không bị gdown thử lại trong vô hạn.
    - Khi bấm **`🛑 Dừng Tải`**, giao diện lập tức phản hồi và mở lại các nút chức năng trong 0.001s, không gây đơ treo ứng dụng.
-7. **Tự Động Chuẩn Hóa Tên File (Filename Sanitization)**:
-   - Tự động thay thế các ký tự đặc biệt không hợp lệ trên Windows (như `:`, `'`, `$`, `!`, `?`, `*`, `<`, `>`, `|`, `"`, `/`, `\`) thành dấu gạch dưới `_`.
 
 ---
 
@@ -44,7 +45,10 @@ Nếu ứng dụng **GDrive Flow** giúp ích cho bạn, bạn có thể ủng h
 
 ## 📋 Lịch Sử Phiên Bản (Changelog)
 
-- **v2.1.0 (Hiện tại)**:
+- **v2.1.1 (Hiện tại)**:
+  - Khử toàn bộ link bên thứ 3 (`wkentaro/gdown`) trong thông báo lỗi.
+  - Bổ sung hướng dẫn mở quyền chia sẻ Google Drive ('Bất kỳ ai có liên kết đều có thể xem').
+- **v2.1.0**:
   - Cập nhật thông tin Donate: Chủ tài khoản `Nguyen Ngoc Thai Ha`, STK `64608121989`.
   - Tích hợp biểu tượng icon **Cờ Việt Nam** & **Cờ Anh Quốc** sắc nét trên thanh chuyển ngôn ngữ.
   - Thêm tính năng bấm vào nhãn Phiên bản (Version Badge) để xem Lịch sử cập nhật (Changelog) tương tác.
@@ -58,12 +62,6 @@ Nếu ứng dụng **GDrive Flow** giúp ích cho bạn, bạn có thể ủng h
 - **v1.8.0**:
   - Thêm tính năng **`🐛 Báo Lỗi`** (`Bug Report`) tích hợp copy log và mở GitHub Issues.
   - Dịch toàn bộ Nhật ký (Logs), Cây thư mục (Folder tree), Trạng thái (Badges) và Thông báo sang tiếng Anh chuẩn xác 100%.
-- **v1.7.0**:
-  - Sửa lỗi nút **`🛑 Dừng Tải`** không dừng được do vòng lặp retry mặc định của `gdown`.
-  - Áp dụng `DownloadCancelledException` (BaseException) giúp dừng tức thì và giải phóng giao diện ngay lập tức khi người dùng hủy.
-- **v1.6.0**:
-  - Thêm thông tin tác giả **Phát triển bởi TÔN NGỘ ĐỘC**.
-  - Tích hợp đa ngôn ngữ song ngữ Tiếng Việt & English kèm nút chuyển đổi tức thì trên giao diện.
 
 ---
 

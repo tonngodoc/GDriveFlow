@@ -82,7 +82,22 @@ class GDriveService:
         if re.match(r'^[a-zA-Z0-9_-]{20,}$', url_or_id):
             return url_or_id, 'unknown'
 
-        return None, "unknown"
+    @staticmethod
+    def clean_error_message(err_msg: str) -> str:
+        """Removes internal gdown repository URLs and sanitizes error text for end users."""
+        if not err_msg:
+            return "Unknown error occurred."
+
+        # Strip third-party gdown URLs and FAQ references
+        cleaned = re.sub(r'https?://github\.com/wkentaro/gdown[^\s]*', '', err_msg)
+        cleaned = re.sub(r'Check FAQ in\s*', '', cleaned)
+        cleaned = cleaned.strip(" .:\t\r\n")
+
+        # Detect 401 / permission denied / restricted access
+        if "401" in err_msg or "permission" in err_msg.lower() or "access" in err_msg.lower():
+            return f"{cleaned}\n💡 Gợi ý: Vui lòng kiểm tra và mở quyền chia sẻ của Google Drive sang 'Bất kỳ ai có liên kết đều có thể xem' (Anyone with the link can view)."
+
+        return cleaned if cleaned else err_msg
 
     def scan_folder(self, folder_url_or_id: str, status_callback: Optional[Callable[[str], None]] = None) -> List[GDriveItem]:
         """
@@ -104,7 +119,8 @@ class GDriveService:
                 quiet=True
             )
         except Exception as e:
-            raise Exception(f"Unable to scan Google Drive folder. Please check sharing permissions ('Anyone with the link can view'). Error details: {str(e)}")
+            cleaned_err = self.clean_error_message(str(e))
+            raise Exception(f"Không thể lấy danh sách thư mục Google Drive (Folder ID: {item_id}). {cleaned_err}")
 
         gdrive_items = []
         if files_to_download:
@@ -173,27 +189,33 @@ class GDriveService:
         else:
             target_output_path = os.path.join(target_dir, "")
 
-        file_url = f"https://drive.google.com/uc?id={gdrive_item.file_id}"
-
         try:
-            saved_path = gdown.download(
-                url=file_url,
-                output=target_output_path,
-                quiet=True,
-                progress=_progress_hook,
-                resume=True
-            )
-        except Exception:
-            saved_path = gdown.download(
-                id=gdrive_item.file_id,
-                output=target_output_path,
-                quiet=True,
-                progress=_progress_hook,
-                resume=True
-            )
+            try:
+                saved_path = gdown.download(
+                    url=file_url,
+                    output=target_output_path,
+                    quiet=True,
+                    progress=_progress_hook,
+                    resume=True
+                )
+            except DownloadCancelledException:
+                raise
+            except Exception:
+                saved_path = gdown.download(
+                    id=gdrive_item.file_id,
+                    output=target_output_path,
+                    quiet=True,
+                    progress=_progress_hook,
+                    resume=True
+                )
+        except DownloadCancelledException:
+            raise
+        except Exception as err:
+            cleaned_err = self.clean_error_message(str(err))
+            raise Exception(cleaned_err)
 
         if not saved_path or not os.path.exists(str(saved_path)):
-            raise Exception(f"Failed to download file (ID: {gdrive_item.file_id}). Ensure file is publicly accessible.")
+            raise Exception(f"Không thể tải tệp (ID: {gdrive_item.file_id}). Vui lòng kiểm tra quyền chia sẻ của tệp trên Google Drive.")
 
         # Post-download check: if gdown auto-saved under a raw filename with special chars, rename it safely!
         raw_saved_path = str(saved_path)
