@@ -91,11 +91,11 @@ class GDriveService:
         """
         item_id, item_type = self.parse_url_or_id(folder_url_or_id)
         if not item_id:
-            raise Exception("URL hoặc ID Google Drive Folder không hợp lệ.")
+            raise Exception("Invalid Google Drive URL or Folder ID.")
 
         folder_url = f"https://drive.google.com/drive/folders/{item_id}"
         if status_callback:
-            status_callback(f"🔍 Đang phân tích và quét danh sách tệp/thư mục con từ Google Drive...")
+            status_callback(f"🔍 Analyzing & scanning files from Google Drive...")
 
         try:
             files_to_download = gdown.download_folder(
@@ -104,7 +104,7 @@ class GDriveService:
                 quiet=True
             )
         except Exception as e:
-            raise Exception(f"Không thể quét thư mục Google Drive. Vui lòng kiểm tra lại quyền truy cập (Đặt quyền 'Bất kỳ ai có liên kết đều có thể xem'). Chi tiết lỗi: {str(e)}")
+            raise Exception(f"Unable to scan Google Drive folder. Please check sharing permissions ('Anyone with the link can view'). Error details: {str(e)}")
 
         gdrive_items = []
         if files_to_download:
@@ -119,7 +119,7 @@ class GDriveService:
                 clean_sub_dir = self.sanitize_relative_path(sub_dir)
 
                 if status_callback:
-                    status_callback(f"Tìm thấy: {os.path.join(clean_sub_dir, clean_file_name)}")
+                    status_callback(f"Found: {os.path.join(clean_sub_dir, clean_file_name)}")
 
                 gdrive_items.append(GDriveItem(
                     file_id=file_id,
@@ -150,7 +150,7 @@ class GDriveService:
 
         def _progress_hook(bytes_so_far: int, bytes_total: Optional[int]):
             if cancel_check and cancel_check():
-                raise DownloadCancelledException("Đã hủy quá trình tải xuống.")
+                raise DownloadCancelledException("Download cancelled.")
 
             total = bytes_total if bytes_total and bytes_total > 0 else 0
             now = time.time()
@@ -193,7 +193,7 @@ class GDriveService:
             )
 
         if not saved_path or not os.path.exists(str(saved_path)):
-            raise Exception(f"Không thể tải tệp (ID: {gdrive_item.file_id}). Đảm bảo file được chia sẻ công khai.")
+            raise Exception(f"Failed to download file (ID: {gdrive_item.file_id}). Ensure file is publicly accessible.")
 
         # Post-download check: if gdown auto-saved under a raw filename with special chars, rename it safely!
         raw_saved_path = str(saved_path)

@@ -2,6 +2,7 @@ import os
 import sys
 import threading
 import time
+import webbrowser
 from typing import Optional, List, Tuple
 from tkinter import filedialog, messagebox
 import customtkinter as ctk
@@ -10,7 +11,7 @@ from gdrive_service import GDriveService, GDriveItem, DownloadCancelledException
 
 # Application Metadata
 APP_NAME = "DriveFlow Pro"
-APP_VERSION = "v1.7.0"
+APP_VERSION = "v1.8.0"
 DEVELOPER_NAME_VI = "Phát triển bởi TÔN NGỘ ĐỘC"
 DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
 
@@ -20,6 +21,7 @@ TRANSLATIONS = {
         "title": "DriveFlow Pro",
         "developer": DEVELOPER_NAME_VI,
         "version": "Phiên bản",
+        "report_bug": "🐛 Báo Lỗi",
         "url_label": "Link / ID Google Drive:",
         "url_placeholder": "Dán liên kết Thư Mục (Folder) hoặc Tệp (File) Google Drive...",
         "scan_btn": "🔍 Quét Cây Thư Mục",
@@ -35,11 +37,17 @@ TRANSLATIONS = {
         "retry_failed": "🔄 Tải Lại File Lỗi",
         "cancel_download": "🛑 Dừng Tải",
         "status_ready": "Trạng thái: Sẵn sàng tải xuống",
+        "status_finished": "✅ Trạng thái: Hoàn tất tải xuống",
+        "status_stopped": "🛑 Trạng thái: Đã dừng tải xuống",
+        "status_error": "❌ Trạng thái: Đã dừng hoặc Lỗi",
+        "downloading_status": "[{idx}/{total}] Đang tải: {name}",
         "speed": "⚡ Tốc Độ Tải",
         "file_size": "📦 Dung Lượng File",
         "queue_status": "📊 Đã Chọn Tải",
         "eta": "⏳ Thời Gian Còn Lại",
-        "log_header": "📝 Log:",
+        "log_header": "📝 Log Console:",
+        "log_ready": "Sẵn sàng hoạt động.",
+        "log_cleared": "Đã xóa sạch log.",
         "log_expanded": "▲ Thu Gọn Log",
         "log_collapsed": "📋 Xem Toàn Bộ Log",
         "clear_log": "Xóa Log",
@@ -47,6 +55,8 @@ TRANSLATIONS = {
         "error_badge": "❌ Lỗi tải",
         "paused_badge": "⚠️ Tạm dừng (Resume ok)",
         "downloading_badge": "🔵 Đang tải...",
+        "empty_folder": "⚠️ Thư mục trống hoặc không tìm thấy tệp nào.",
+        "file_unit": "file",
         "no_failed_files": "Không có tệp nào bị lỗi cần tải lại!",
         "no_scanned_files": "Chưa có danh sách tệp nào được quét!",
         "no_selected_files": "Vui lòng tích chọn ít nhất 1 file trong cây thư mục để tải về!",
@@ -55,12 +65,36 @@ TRANSLATIONS = {
         "enter_dest": "Vui lòng chỉ định thư mục lưu file!",
         "tree_placeholder": "Dán link Google Drive và bấm '🔍 Quét Cây Thư Mục' để xem danh sách file/folder...",
         "all_done": "🎉 TẤT CẢ FILE ĐÃ ĐƯỢC TẢI XONG!",
-        "finish_msg": "Đã hoàn thành tải xuống các tệp đã chọn!"
+        "finish_msg": "Đã hoàn thành tải xuống các tệp đã chọn!",
+
+        # Logs localization
+        "log_scanning_folder": "📁 Đang quét Thư Mục Google Drive (ID: {id})...",
+        "log_analyzing_file": "📄 Đang phân tích Tệp Google Drive (ID: {id})...",
+        "log_scan_error": "❌ Lỗi quét: {error}",
+        "log_tree_rendered": "✅ Cấu trúc cây thư mục đã hiển thị với {count} file.",
+        "log_retrying_failed": "🔄 Đang thử lại {count} file bị lỗi...",
+        "log_download_started": "🚀 Bắt đầu tải xuống {count} file đã chọn...",
+        "log_cancel_requested": "🛑 Người dùng yêu cầu dừng tải xuống...",
+        "log_download_stopped": "🛑 Quá trình tải xuống đã dừng.",
+        "log_downloading_item": "📥 [{idx}/{total}] Đang tải: '{name}'...",
+        "log_downloaded_item": "✨ Đã tải xong [{idx}/{total}]: {name}",
+        "log_download_cancelled": "🛑 Đã hủy tải xuống.",
+        "log_download_error": "❌ Lỗi khi tải [{idx}/{total}]: {error}",
+        "log_system_error": "❌ Lỗi hệ thống: {error}",
+
+        # Bug Report Dialog
+        "report_title": "Báo Lỗi Ứng Dụng (Bug Report)",
+        "report_desc": "Nếu gặp sự cố hoặc lỗi khi sử dụng DriveFlow Pro, bạn có thể sao chép nhật ký (logs) hoặc mở trang GitHub Issues để gửi báo cáo.",
+        "report_copy_log": "📋 Sao Chép Log Lỗi",
+        "report_open_github": "🌐 Mở GitHub Issues",
+        "report_copied_msg": "Đã sao chép nội dung log vào Clipboard!",
+        "report_close": "Đóng"
     },
     "en": {
         "title": "DriveFlow Pro",
         "developer": DEVELOPER_NAME_EN,
         "version": "Version",
+        "report_bug": "🐛 Report Bug",
         "url_label": "Google Drive Link / ID:",
         "url_placeholder": "Paste Google Drive Folder or File link here...",
         "scan_btn": "🔍 Scan Folder Tree",
@@ -76,18 +110,26 @@ TRANSLATIONS = {
         "retry_failed": "🔄 Retry Failed Files",
         "cancel_download": "🛑 Stop Download",
         "status_ready": "Status: Ready to download",
+        "status_finished": "✅ Status: Download Finished",
+        "status_stopped": "🛑 Status: Download Stopped",
+        "status_error": "❌ Status: Stopped or Error",
+        "downloading_status": "[{idx}/{total}] Downloading: {name}",
         "speed": "⚡ Download Speed",
         "file_size": "📦 File Size",
         "queue_status": "📊 Selected Queue",
         "eta": "⏳ Remaining Time",
-        "log_header": "📝 Logs:",
+        "log_header": "📝 Log Console:",
+        "log_ready": "Ready for operation.",
+        "log_cleared": "Logs cleared.",
         "log_expanded": "▲ Collapse Logs",
         "log_collapsed": "📋 View Full Logs",
-        "clear_log": "Clear Log",
+        "clear_log": "Clear Logs",
         "completed_badge": "✅ Completed",
         "error_badge": "❌ Download Error",
         "paused_badge": "⚠️ Paused (Resume ok)",
         "downloading_badge": "🔵 Downloading...",
+        "empty_folder": "⚠️ Empty folder or no files found.",
+        "file_unit": "file",
         "no_failed_files": "No failed files to retry!",
         "no_scanned_files": "No scanned files available!",
         "no_selected_files": "Please select at least 1 file to download!",
@@ -96,7 +138,30 @@ TRANSLATIONS = {
         "enter_dest": "Please specify save destination folder!",
         "tree_placeholder": "Paste Google Drive link and click '🔍 Scan Folder Tree' to list contents...",
         "all_done": "🎉 ALL FILES DOWNLOADED SUCCESSFULLY!",
-        "finish_msg": "Selected files have been downloaded successfully!"
+        "finish_msg": "Selected files have been downloaded successfully!",
+
+        # Logs localization
+        "log_scanning_folder": "📁 Scanning Google Drive Folder (ID: {id})...",
+        "log_analyzing_file": "📄 Analyzing Google Drive File (ID: {id})...",
+        "log_scan_error": "❌ Scan error: {error}",
+        "log_tree_rendered": "✅ Folder tree structure rendered with {count} file(s).",
+        "log_retrying_failed": "🔄 Retrying {count} failed file(s)...",
+        "log_download_started": "🚀 Download process started for {count} selected file(s)...",
+        "log_cancel_requested": "🛑 Download cancellation requested by user...",
+        "log_download_stopped": "🛑 Download process stopped.",
+        "log_downloading_item": "📥 [{idx}/{total}] Downloading: '{name}'...",
+        "log_downloaded_item": "✨ Downloaded [{idx}/{total}]: {name}",
+        "log_download_cancelled": "🛑 Download cancelled.",
+        "log_download_error": "❌ Error downloading [{idx}/{total}]: {error}",
+        "log_system_error": "❌ System error: {error}",
+
+        # Bug Report Dialog
+        "report_title": "Application Bug Report",
+        "report_desc": "If you encounter any issues with DriveFlow Pro, you can copy the error log or open GitHub Issues to submit a bug report.",
+        "report_copy_log": "📋 Copy Error Log",
+        "report_open_github": "🌐 Open GitHub Issues",
+        "report_copied_msg": "Log contents copied to Clipboard!",
+        "report_close": "Close"
     }
 }
 
@@ -228,7 +293,7 @@ class GDriveApp(ctk.CTk):
         )
         version_label.pack(side="left", padx=8)
 
-        # Developer Credit Tag Requirement!
+        # Developer Credit Tag Requirement
         self.lbl_developer = ctk.CTkLabel(
             left_header,
             text=f"• {self.t('developer')}",
@@ -237,7 +302,7 @@ class GDriveApp(ctk.CTk):
         )
         self.lbl_developer.pack(side="left", padx=8)
 
-        # Language Switcher Segmented Button Requirement!
+        # Language Switcher Segmented Button
         self.seg_lang = ctk.CTkSegmentedButton(
             title_subframe,
             values=["🇻🇳 Tiếng Việt", "🇬🇧 English"],
@@ -247,6 +312,19 @@ class GDriveApp(ctk.CTk):
         )
         self.seg_lang.set("🇻🇳 Tiếng Việt")
         self.seg_lang.pack(side="right")
+
+        # Report Bug Button
+        self.btn_report = ctk.CTkButton(
+            title_subframe,
+            text=self.t("report_bug"),
+            command=self._open_report_dialog,
+            font=ctk.CTkFont(size=12, weight="bold"),
+            fg_color="#ef4444",
+            hover_color="#dc2626",
+            height=28,
+            width=110
+        )
+        self.btn_report.pack(side="right", padx=(0, 10))
 
         # Row 1: GDrive URL / ID input
         self.lbl_url = ctk.CTkLabel(input_frame, text=self.t("url_label"), font=ctk.CTkFont(size=13, weight="bold"), text_color="#2c3e50")
@@ -322,7 +400,7 @@ class GDriveApp(ctk.CTk):
 
         self.lbl_tree_status = ctk.CTkLabel(
             tree_header,
-            text=f"{self.t('tree_title')} ({self.t('selected_files')}: 0 file):",
+            text=f"{self.t('tree_title')} ({self.t('selected_files')}: 0 {self.t('file_unit')}):",
             font=ctk.CTkFont(size=13, weight="bold"),
             text_color="#1e293b"
         )
@@ -452,7 +530,7 @@ class GDriveApp(ctk.CTk):
         c3.grid(row=0, column=2, padx=4, sticky="ew")
         self.lbl_c3_title = ctk.CTkLabel(c3, text=self.t("queue_status"), font=ctk.CTkFont(size=11, weight="bold"), text_color="#64748b")
         self.lbl_c3_title.pack(pady=(4, 0))
-        self.lbl_val_overall = ctk.CTkLabel(c3, text="0/0 file", font=ctk.CTkFont(size=13, weight="bold"), text_color="#d97706")
+        self.lbl_val_overall = ctk.CTkLabel(c3, text=f"0/0 {self.t('file_unit')}", font=ctk.CTkFont(size=13, weight="bold"), text_color="#d97706")
         self.lbl_val_overall.pack(pady=(0, 4))
 
         # Card 4: ETA
@@ -479,7 +557,7 @@ class GDriveApp(ctk.CTk):
 
         self.lbl_latest_log = ctk.CTkLabel(
             log_header,
-            text="Sẵn sàng hoạt động.",
+            text=self.t("log_ready"),
             font=ctk.CTkFont(family="Consolas", size=11),
             text_color="#475569",
             anchor="w"
@@ -509,6 +587,99 @@ class GDriveApp(ctk.CTk):
             text_color="#f8fafc"
         )
 
+    def _open_report_dialog(self):
+        """Opens interactive Bug Report modal window."""
+        dialog = ctk.CTkToplevel(self)
+        dialog.title(self.t("report_title"))
+        dialog.geometry("560x440")
+        dialog.resizable(False, False)
+        dialog.grab_set()
+
+        lbl_title = ctk.CTkLabel(
+            dialog,
+            text=f"🐛 {self.t('report_title')}",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#1f6aa5"
+        )
+        lbl_title.pack(padx=20, pady=(15, 5), anchor="w")
+
+        lbl_desc = ctk.CTkLabel(
+            dialog,
+            text=self.t("report_desc"),
+            font=ctk.CTkFont(size=12),
+            text_color="#475569",
+            wraplength=520,
+            justify="left"
+        )
+        lbl_desc.pack(padx=20, pady=(0, 10), anchor="w")
+
+        txt_report = ctk.CTkTextbox(
+            dialog,
+            font=ctk.CTkFont(family="Consolas", size=11),
+            height=200,
+            wrap="word",
+            fg_color="#1e293b",
+            text_color="#f8fafc"
+        )
+        txt_report.pack(padx=20, pady=5, fill="both", expand=True)
+
+        log_content = self.txt_log.get("1.0", "end-1c")
+        if not log_content.strip():
+            log_content = f"--- {APP_NAME} ({APP_VERSION}) Log Report ---\n{self.t('log_ready')}"
+        txt_report.insert("1.0", log_content)
+        txt_report.configure(state="disabled")
+
+        lbl_feedback = ctk.CTkLabel(
+            dialog,
+            text="",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color="#16a34a"
+        )
+        lbl_feedback.pack(pady=(5, 0))
+
+        btn_frame = ctk.CTkFrame(dialog, fg_color="transparent")
+        btn_frame.pack(padx=20, pady=(5, 15), fill="x")
+
+        def copy_logs():
+            self.clipboard_clear()
+            self.clipboard_append(log_content)
+            lbl_feedback.configure(text=self.t("report_copied_msg"))
+            self.after(3000, lambda: lbl_feedback.configure(text=""))
+
+        def open_github():
+            webbrowser.open("https://github.com/tonngodoc/DriveFlow/issues/new")
+
+        btn_copy = ctk.CTkButton(
+            btn_frame,
+            text=self.t("report_copy_log"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            command=copy_logs,
+            fg_color="#0284c7",
+            hover_color="#0369a1"
+        )
+        btn_copy.pack(side="left", padx=(0, 10))
+
+        btn_gh = ctk.CTkButton(
+            btn_frame,
+            text=self.t("report_open_github"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            command=open_github,
+            fg_color="#2fa572",
+            hover_color="#1e7b52"
+        )
+        btn_gh.pack(side="left", padx=(0, 10))
+
+        btn_close = ctk.CTkButton(
+            btn_frame,
+            text=self.t("report_close"),
+            font=ctk.CTkFont(size=12),
+            command=dialog.destroy,
+            fg_color="#64748b",
+            hover_color="#475569",
+            width=90
+        )
+        btn_close.pack(side="right")
+
     def _on_change_language(self, selected_val: str):
         """Switches active language between Vietnamese and English."""
         if "English" in selected_val:
@@ -521,6 +692,7 @@ class GDriveApp(ctk.CTk):
 
         # Update labels & buttons
         self.lbl_developer.configure(text=f"• {self.t('developer')}")
+        self.btn_report.configure(text=self.t("report_bug"))
         self.lbl_url.configure(text=self.t("url_label"))
         self.entry_url.configure(placeholder_text=self.t("url_placeholder"))
         self.btn_scan.configure(text=self.t("scan_btn"))
@@ -544,7 +716,12 @@ class GDriveApp(ctk.CTk):
         if not self.is_downloading:
             self.lbl_current_file.configure(text=self.t("status_ready"))
 
-        self._update_tree_count_label()
+        # Re-render tree if available to update badge texts dynamically!
+        if self.tree_root:
+            self._rebuild_visible_tree_ui()
+            self._update_tree_count_label()
+        elif hasattr(self, 'lbl_tree_placeholder') and self.lbl_tree_placeholder.winfo_exists():
+            self.lbl_tree_placeholder.configure(text=self.t("tree_placeholder"))
 
     # ==========================================
     # LOGIC & EVENT HANDLERS
@@ -575,7 +752,7 @@ class GDriveApp(ctk.CTk):
 
     def _clear_log(self):
         self.txt_log.delete("1.0", "end")
-        self.lbl_latest_log.configure(text="Clean log.")
+        self.lbl_latest_log.configure(text=self.t("log_cleared"))
 
     def _on_browse_dest(self):
         path = filedialog.askdirectory(title=self.t("dest_label"))
@@ -609,10 +786,10 @@ class GDriveApp(ctk.CTk):
     def _scan_process_worker(self, raw_url: str, item_id: str, item_type: str):
         try:
             if item_type == 'folder' or 'folders/' in raw_url:
-                self.log(f"📁 Scanning Google Drive Folder (ID: {item_id})...")
+                self.log(self.t("log_scanning_folder").format(id=item_id))
                 gitems = self.service.scan_folder(raw_url, status_callback=lambda msg: self.log(msg))
             else:
-                self.log(f"📄 Analyzing Google Drive File (ID: {item_id})...")
+                self.log(self.t("log_analyzing_file").format(id=item_id))
                 gitem = GDriveItem(
                     file_id=item_id,
                     name="",
@@ -625,7 +802,7 @@ class GDriveApp(ctk.CTk):
             self.after(0, lambda: self._render_tree_ui(root_node))
 
         except Exception as e:
-            self.log(f"❌ Scan error: {str(e)}")
+            self.log(self.t("log_scan_error").format(error=str(e)))
             self.after(0, lambda: (
                 self.btn_scan.configure(state="normal", text=self.t("scan_btn")),
                 messagebox.showerror("Scan Error", str(e))
@@ -670,16 +847,16 @@ class GDriveApp(ctk.CTk):
         if not root_node.children:
             lbl = ctk.CTkLabel(
                 self.scroll_tree,
-                text="⚠️ Empty folder or no files found.",
+                text=self.t("empty_folder"),
                 font=ctk.CTkFont(size=12),
                 text_color="#ef4444"
             )
             lbl.pack(pady=25)
-            self.lbl_tree_status.configure(text=f"{self.t('tree_title')} (0 file):")
+            self.lbl_tree_status.configure(text=f"{self.t('tree_title')} (0 {self.t('file_unit')}):")
             return
 
         total_files = len(root_node.get_all_file_nodes())
-        self.log(f"✅ Tree structure rendered with {total_files} file(s).")
+        self.log(self.t("log_tree_rendered").format(count=total_files))
 
         for top_child in root_node.children:
             self._render_single_node_widget(top_child, depth=0)
@@ -741,7 +918,7 @@ class GDriveApp(ctk.CTk):
             size_info = f" ({GDriveService.format_bytes(node.gdrive_item.size)})"
         elif node.is_folder:
             child_files_count = len(node.get_all_file_nodes())
-            size_info = f" [{child_files_count} file]"
+            size_info = f" [{child_files_count} {self.t('file_unit')}]"
 
         icon_str = "📁 " if node.is_folder else "📄 "
         cb = ctk.CTkCheckBox(
@@ -820,8 +997,8 @@ class GDriveApp(ctk.CTk):
 
     def _update_tree_count_label(self):
         if not self.tree_root:
-            self.lbl_tree_status.configure(text=f"{self.t('tree_title')} (0 file):")
-            self.lbl_val_overall.configure(text="0/0 file")
+            self.lbl_tree_status.configure(text=f"{self.t('tree_title')} (0 {self.t('file_unit')}):")
+            self.lbl_val_overall.configure(text=f"0/0 {self.t('file_unit')}")
             return
 
         all_file_nodes = self.tree_root.get_all_file_nodes()
@@ -832,9 +1009,9 @@ class GDriveApp(ctk.CTk):
         size_str = f" ({GDriveService.format_bytes(selected_bytes)})" if selected_bytes > 0 else ""
 
         self.lbl_tree_status.configure(
-            text=f"{self.t('tree_title')} ({self.t('selected_files')}: {len(selected_files)} / {total_files} file{size_str}):"
+            text=f"{self.t('tree_title')} ({self.t('selected_files')}: {len(selected_files)} / {total_files} {self.t('file_unit')}{size_str}):"
         )
-        self.lbl_val_overall.configure(text=f"{len(selected_files)}/{total_files} file")
+        self.lbl_val_overall.configure(text=f"{len(selected_files)}/{total_files} {self.t('file_unit')}")
 
     def _update_node_status_ui(self, node: TreeNode, status: str, status_text: str, progress_val: float = 0.0):
         """Updates in-place node status text & background color directly in O(1) time."""
@@ -903,7 +1080,7 @@ class GDriveApp(ctk.CTk):
             n.var_checked.set(True)
             self._update_node_status_ui(n, status="pending", status_text="")
 
-        self.log(f"🔄 Retrying {len(failed_nodes)} failed files...")
+        self.log(self.t("log_retrying_failed").format(count=len(failed_nodes)))
         self._on_start_download()
 
     def _on_start_download(self):
@@ -962,11 +1139,11 @@ class GDriveApp(ctk.CTk):
     def _on_cancel_download(self):
         if self.is_downloading:
             self.cancel_requested = True
-            self.log("🛑 Download cancellation requested by user...")
+            self.log(self.t("log_cancel_requested"))
             self.btn_cancel.configure(state="disabled")
             self.btn_start.configure(state="normal")
             self.btn_scan.configure(state="normal")
-            self.lbl_current_file.configure(text="🛑 Status: Stopped")
+            self.lbl_current_file.configure(text=self.t("status_stopped"))
             self.lbl_val_speed.configure(text="0 KB/s")
             self.lbl_val_eta.configure(text="00:00")
             self.is_downloading = False
@@ -974,13 +1151,13 @@ class GDriveApp(ctk.CTk):
     def _download_process_worker(self, file_nodes: list[TreeNode], dest_dir: str):
         try:
             total_count = len(file_nodes)
-            self.log(f"🚀 Download started for {total_count} selected files...")
+            self.log(self.t("log_download_started").format(count=total_count))
 
             start_overall_time = time.time()
 
             for index, node in enumerate(file_nodes, 1):
                 if self.cancel_requested:
-                    self.log("🛑 Download process stopped.")
+                    self.log(self.t("log_download_stopped"))
                     self._update_node_status_ui(node, status="paused", status_text=self.t("paused_badge"))
                     break
 
@@ -989,12 +1166,12 @@ class GDriveApp(ctk.CTk):
                     continue
 
                 file_disp_name = node.name
-                self.log(f"📥 [{index}/{total_count}] Downloading: '{file_disp_name}'...")
+                self.log(self.t("log_downloading_item").format(idx=index, total=total_count, name=file_disp_name))
 
                 self._update_node_status_ui(node, status="downloading", status_text="🔵 0%", progress_val=0.0)
 
                 self.after(0, lambda idx=index, name=file_disp_name, total=total_count: (
-                    self.lbl_current_file.configure(text=f"[{idx}/{total}] Downloading: {name}")
+                    self.lbl_current_file.configure(text=self.t("downloading_status").format(idx=idx, total=total, name=name))
                 ))
 
                 def progress_cb(current_bytes, total_bytes, speed, percent):
@@ -1011,7 +1188,7 @@ class GDriveApp(ctk.CTk):
                     remaining_bytes = (total_bytes - current_bytes) if total_bytes > current_bytes else 0
                     eta_sec = (remaining_bytes / speed) if speed > 0 else 0
                     eta_str = GDriveService.format_time(eta_sec)
-                    overall_str = f"{index}/{total_count} file"
+                    overall_str = f"{index}/{total_count} {self.t('file_unit')}"
 
                     node_status_str = f"🔵 {int(percent)}%"
                     self._update_node_status_ui(node, status="downloading", status_text=node_status_str, progress_val=percent/100.0)
@@ -1032,11 +1209,11 @@ class GDriveApp(ctk.CTk):
                     )
 
                     self._update_node_status_ui(node, status="completed", status_text=self.t("completed_badge"), progress_val=1.0)
-                    self.log(f"✨ Downloaded [{index}/{total_count}]: {os.path.basename(saved_path)}")
+                    self.log(self.t("log_downloaded_item").format(idx=index, total=total_count, name=os.path.basename(saved_path)))
 
                 except DownloadCancelledException:
                     self._update_node_status_ui(node, status="paused", status_text=self.t("paused_badge"), progress_val=0.5)
-                    self.log("🛑 Download cancelled.")
+                    self.log(self.t("log_download_cancelled"))
                     break
                 except Exception as e:
                     if self.cancel_requested:
@@ -1044,7 +1221,7 @@ class GDriveApp(ctk.CTk):
                         break
 
                     self._update_node_status_ui(node, status="error", status_text=self.t("error_badge"), progress_val=0.0)
-                    self.log(f"❌ Error downloading [{index}/{total_count}]: {str(e)}")
+                    self.log(self.t("log_download_error").format(idx=index, total=total_count, error=str(e)))
 
             if not self.cancel_requested:
                 total_elapsed = time.time() - start_overall_time
@@ -1052,7 +1229,7 @@ class GDriveApp(ctk.CTk):
                 self._finish_download_process(success=True, message=self.t("finish_msg"))
 
         except Exception as e:
-            self.log(f"❌ System error: {str(e)}")
+            self.log(self.t("log_system_error").format(error=str(e)))
             self._finish_download_process(success=False, message=str(e))
 
     def _finish_download_process(self, success: bool, message: str):
@@ -1064,10 +1241,10 @@ class GDriveApp(ctk.CTk):
             self.lbl_val_speed.configure(text="0 KB/s")
             self.lbl_val_eta.configure(text="00:00")
             if success:
-                self.lbl_current_file.configure(text="✅ Status: Finished")
+                self.lbl_current_file.configure(text=self.t("status_finished"))
                 messagebox.showinfo("Notification", message)
             else:
-                self.lbl_current_file.configure(text="❌ Status: Stopped or Error")
+                self.lbl_current_file.configure(text=self.t("status_error"))
 
         self.after(0, _reset_ui)
 

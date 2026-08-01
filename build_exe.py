@@ -12,7 +12,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 def build_exe():
     print("=" * 60)
-    print("  Building DriveFlow Pro (v1.7.0) to a Single Standalone .exe file...")
+    print("  Building DriveFlow Pro (v1.8.0) to a Single Standalone .exe file...")
     print("  Developed by TON NGO DOC")
     print("=" * 60)
 
