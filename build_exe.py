@@ -12,7 +12,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 def build_exe():
     print("=" * 60)
-    print("  Building DriveFlow Pro (v1.6.0) to a Single Standalone .exe file...")
+    print("  Building DriveFlow Pro (v1.7.0) to a Single Standalone .exe file...")
     print("  Developed by TON NGO DOC")
     print("=" * 60)
 
@@ -44,13 +44,21 @@ def build_exe():
         dist_exe = os.path.abspath(os.path.join("dist", "DriveFlow.exe"))
         root_exe = os.path.abspath("DriveFlow.exe")
 
-        # Copy DriveFlow.exe directly into D:\GDownloader\
+        copied = False
         if os.path.exists(dist_exe):
-            shutil.copy(dist_exe, root_exe)
+            try:
+                shutil.copy(dist_exe, root_exe)
+                copied = True
+            except PermissionError:
+                print(f"\n⚠️ Notice: Could not overwrite '{root_exe}' because DriveFlow.exe is currently running.")
+                print(f"   The updated binary was built successfully and is ready at: '{dist_exe}'")
 
         print("\n" + "=" * 60)
         print("BUILD SUCCESSFUL!")
-        print(f"Single Executable created directly at: {root_exe}")
+        if copied:
+            print(f"Single Executable created directly at: {root_exe}")
+        else:
+            print(f"Single Executable created at: {dist_exe}")
         print("=" * 60)
     else:
         print("\nPyInstaller build failed!")

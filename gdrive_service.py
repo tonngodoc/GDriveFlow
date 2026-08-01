@@ -6,6 +6,11 @@ from typing import Callable, List, Dict, Optional, Tuple
 import gdown
 from gdown.parse_url import parse_url
 
+class DownloadCancelledException(BaseException):
+    """Custom exception inheriting from BaseException to bypass gdown's internal retry loops on cancellation."""
+    pass
+
+
 class GDriveItem:
     def __init__(self, file_id: str, name: str = "", relative_path: str = "", size: int = 0):
         self.file_id = file_id
@@ -145,7 +150,7 @@ class GDriveService:
 
         def _progress_hook(bytes_so_far: int, bytes_total: Optional[int]):
             if cancel_check and cancel_check():
-                raise Exception("Đã hủy quá trình tải xuống.")
+                raise DownloadCancelledException("Đã hủy quá trình tải xuống.")
 
             total = bytes_total if bytes_total and bytes_total > 0 else 0
             now = time.time()

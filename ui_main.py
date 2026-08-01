@@ -6,11 +6,11 @@ from typing import Optional, List, Tuple
 from tkinter import filedialog, messagebox
 import customtkinter as ctk
 
-from gdrive_service import GDriveService, GDriveItem
+from gdrive_service import GDriveService, GDriveItem, DownloadCancelledException
 
 # Application Metadata
 APP_NAME = "DriveFlow Pro"
-APP_VERSION = "v1.6.0"
+APP_VERSION = "v1.7.0"
 DEVELOPER_NAME_VI = "Phát triển bởi TÔN NGỘ ĐỘC"
 DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
 
@@ -962,8 +962,14 @@ class GDriveApp(ctk.CTk):
     def _on_cancel_download(self):
         if self.is_downloading:
             self.cancel_requested = True
-            self.log("🛑 Download cancellation requested...")
+            self.log("🛑 Download cancellation requested by user...")
             self.btn_cancel.configure(state="disabled")
+            self.btn_start.configure(state="normal")
+            self.btn_scan.configure(state="normal")
+            self.lbl_current_file.configure(text="🛑 Status: Stopped")
+            self.lbl_val_speed.configure(text="0 KB/s")
+            self.lbl_val_eta.configure(text="00:00")
+            self.is_downloading = False
 
     def _download_process_worker(self, file_nodes: list[TreeNode], dest_dir: str):
         try:
@@ -993,7 +999,7 @@ class GDriveApp(ctk.CTk):
 
                 def progress_cb(current_bytes, total_bytes, speed, percent):
                     if self.cancel_requested:
-                        return
+                        raise DownloadCancelledException("Download cancelled by user.")
 
                     if total_bytes and total_bytes > 0 and gitem.size == 0:
                         gitem.size = total_bytes
@@ -1028,6 +1034,10 @@ class GDriveApp(ctk.CTk):
                     self._update_node_status_ui(node, status="completed", status_text=self.t("completed_badge"), progress_val=1.0)
                     self.log(f"✨ Downloaded [{index}/{total_count}]: {os.path.basename(saved_path)}")
 
+                except DownloadCancelledException:
+                    self._update_node_status_ui(node, status="paused", status_text=self.t("paused_badge"), progress_val=0.5)
+                    self.log("🛑 Download cancelled.")
+                    break
                 except Exception as e:
                     if self.cancel_requested:
                         self._update_node_status_ui(node, status="paused", status_text=self.t("paused_badge"), progress_val=0.5)
