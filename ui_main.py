@@ -12,18 +12,24 @@ from gdrive_service import GDriveService, GDriveItem, DownloadCancelledException
 
 # Application Metadata
 APP_NAME = "GDrive Flow"
-APP_VERSION = "v2.1.2"
-DEVELOPER_NAME_VI = "Phát triển bởi TÔN NGỘ ĐỘC"
-DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
+APP_VERSION = "v2.2.0"
+DEVELOPER_NAME_VI = "Videcoding by TonNgoDoc"
+DEVELOPER_NAME_EN = "Videcoding by TonNgoDoc"
 
 # Release History / Changelog
 CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release History)
 
 --------------------------------------------------
-📌 Phiên Bản v2.1.2 (Hiện tại)
+📌 Phiên Bản v2.2.0 (Hiện tại)
 --------------------------------------------------
-- ⚡ Sửa triệt để lỗi không hiển thị trạng thái file real-time trong cây thư mục.
-- 📂 Mặc định mở rộng cây thư mục (Expanded tree view) giúp mọi trạng thái file hiển thị trực tiếp 100%.
+- 📁 Mặc định giữ thu gọn cây thư mục (Collapsed tree view by default) tránh đơ lag khi quét folder hàng ngàn tệp.
+- ⚡ Thẻ trạng thái trong danh sách chỉ hiển thị gọn gàng ('🔵 Đang tải...', '✅ Hoàn thành', '❌ Lỗi tải'), không chứa số %.
+- 📊 Thêm 2 thanh năng lượng hiển thị % tiến trình tải thời gian thực (Tiến trình File hiện tại & Tiến trình Toàn bộ Queue) tại khu vực Trạng Thái chính.
+
+--------------------------------------------------
+📌 Phiên Bản v2.1.2
+--------------------------------------------------
+- ⚡ Sửa lỗi hiển thị trạng thái file real-time trong cây thư mục.
 - 📊 Đồng bộ thẻ tiến trình hiển thị thời gian thực cho thư mục cha (ví dụ 🔵 3/10 -> ✅ 10/10).
 
 --------------------------------------------------
@@ -35,53 +41,24 @@ CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release Hist
 --------------------------------------------------
 📌 Phiên Bản v2.1.0
 --------------------------------------------------
-- 💳 Cập nhật thông tin Donate chính thức:
-  • Ngân hàng: TPBank (Ngân hàng Tiên Phong)
-  • Chủ tài khoản: Nguyen Ngoc Thai Ha
-  • Số tài khoản (STK): 64608121989
+- 💳 Cập nhật thông tin Donate chính thức (TPBank - Nguyen Ngoc Thai Ha - 64608121989).
 - 🇻🇳🇬🇧 Tích hợp biểu tượng icon Cờ Việt Nam & Cờ Anh Quốc sắc nét trên thanh chuyển ngôn ngữ.
 - 🛈 Bấm vào nhãn Phiên bản (Version Badge) để xem nhật ký cập nhật ứng dụng trực tiếp.
-
---------------------------------------------------
-📌 Phiên Bản v2.0.0
---------------------------------------------------
-- 💖 Tích hợp cửa sổ popup Donate ủng hộ tác giả.
-- 🌐 Cập nhật repository GitHub chính thức: https://github.com/tonngodoc/GDriveFlow
-
---------------------------------------------------
-📌 Phiên Bản v1.9.0
---------------------------------------------------
-- 🌊 Chính thức đổi tên thương hiệu ứng dụng thành GDrive Flow.
-- 🖼️ Thiết kế Logo thương hiệu mới kết hợp biểu tượng Google Drive và luồng tải sóng động.
-
---------------------------------------------------
-📌 Phiên Bản v1.8.0
---------------------------------------------------
-- 🐛 Thêm tính năng Báo Lỗi Ứng Dụng (Bug Report) tích hợp sao chép Log và mở GitHub Issues.
-- 🌐 Dịch 100% nhật ký (Logs), cây thư mục, thẻ tiến trình và thông báo sang tiếng Anh chuẩn xác.
-
---------------------------------------------------
-📌 Phiên Bản v1.7.0
---------------------------------------------------
-- 🛑 Khắc phục 100% lỗi nút 'Dừng Tải' không dừng được với ngoại lệ DownloadCancelledException.
-- ⚡ Thoát tức thì giải phóng giao diện trong 0.001s khi hủy tải.
-
---------------------------------------------------
-📌 Phiên Bản v1.6.0 & Cũ Hơn
---------------------------------------------------
-- 🌐 Hỗ trợ đa ngôn ngữ Tiếng Việt & English.
-- 🔄 Thêm tính năng Tải Lại File Lỗi (Retry Failed Downloads).
-- ⚡ Tối ưu cập nhật thẻ tiến trình Badge O(1) loại bỏ giật lag.
-- 🧹 Tự động chuẩn hóa tên file & đường dẫn thư mục tránh lỗi Windows.
 """
 
 CHANGELOG_TEXT_EN = """🌊 GDrive Flow - Version Release History
 
 --------------------------------------------------
-📌 Version v2.1.2 (Current)
+📌 Version v2.2.0 (Current)
+--------------------------------------------------
+- 📁 Default collapsed tree view to prevent UI lag on huge Google Drive folders.
+- ⚡ Clean list badges ('🔵 Downloading...', '✅ Completed', '❌ Download Error') without percentage numbers in tree view.
+- 📊 Dual real-time Progress Energy Bars (% Current File & % Overall Queue) integrated in the Main Status Section.
+
+--------------------------------------------------
+📌 Version v2.1.2
 --------------------------------------------------
 - ⚡ Fixed real-time file status badge display bug across all tree levels.
-- 📂 Enabled default expanded tree view so every file status is 100% visible immediately.
 - 📊 Real-time parent folder progress badges (e.g. 🔵 3/10 -> ✅ 10/10).
 
 --------------------------------------------------
@@ -93,44 +70,9 @@ CHANGELOG_TEXT_EN = """🌊 GDrive Flow - Version Release History
 --------------------------------------------------
 📌 Version v2.1.0
 --------------------------------------------------
-- 💳 Updated official Donate info:
-  • Bank: TPBank (Tiên Phong Bank)
-  • Account Holder: Nguyen Ngoc Thai Ha
-  • Account Number (STK): 64608121989
+- 💳 Updated official Donate info (TPBank - Nguyen Ngoc Thai Ha - 64608121989).
 - 🇻🇳🇬🇧 Added crisp flag icons for Vietnam & United Kingdom on language selector bar.
 - 🛈 Clickable Version Badge to view app release history log directly.
-
---------------------------------------------------
-📌 Version v2.0.0
---------------------------------------------------
-- 💖 Integrated interactive Donate popup window for supporting developer.
-- 🌐 Updated official GitHub repository: https://github.com/tonngodoc/GDriveFlow
-
---------------------------------------------------
-📌 Version v1.9.0
---------------------------------------------------
-- 🌊 Rebranded official app name to GDrive Flow.
-- 🖼️ Designed new brand logo blending Google Drive icon with dynamic flow wave aesthetics.
-
---------------------------------------------------
-📌 Version v1.8.0
---------------------------------------------------
-- 🐛 Added Interactive Bug Report feature with log copy and GitHub Issues integration.
-- 🌐 100% Full English localization across all system logs, tree badges, and notifications.
-
---------------------------------------------------
-📌 Version v1.7.0
---------------------------------------------------
-- 🛑 Fixed 100% cancellation unblocking using DownloadCancelledException.
-- ⚡ Instant UI thread release in 0.001s upon download cancellation.
-
---------------------------------------------------
-📌 Version v1.6.0 & Earlier
---------------------------------------------------
-- 🌐 Multi-language support (Vietnamese & English).
-- 🔄 Added Retry Failed Downloads feature.
-- ⚡ O(1) Status Badge real-time progress updates.
-- 🧹 Automatic filename & directory sanitization for Windows filesystem safety.
 """
 
 # Multilingual Translation Dictionary
@@ -164,6 +106,8 @@ TRANSLATIONS = {
         "file_size": "📦 Dung Lượng File",
         "queue_status": "📊 Đã Chọn Tải",
         "eta": "⏳ Thời Gian Còn Lại",
+        "file_progress_title": "📄 Tiến Trình File Hiện Tại:",
+        "overall_progress_title": "📊 Tiến Trình Toàn Bộ Queue:",
         "log_header": "📝 Log Console:",
         "log_ready": "Sẵn sàng hoạt động.",
         "log_cleared": "Đã xóa sạch log.",
@@ -172,7 +116,7 @@ TRANSLATIONS = {
         "clear_log": "Xóa Log",
         "completed_badge": "✅ Hoàn thành",
         "error_badge": "❌ Lỗi tải",
-        "paused_badge": "⚠️ Tạm dừng (Resume ok)",
+        "paused_badge": "⚠️ Tạm dừng",
         "downloading_badge": "🔵 Đang tải...",
         "empty_folder": "⚠️ Thư mục trống hoặc không tìm thấy tệp nào.",
         "file_unit": "file",
@@ -252,6 +196,8 @@ TRANSLATIONS = {
         "file_size": "📦 File Size",
         "queue_status": "📊 Selected Queue",
         "eta": "⏳ Remaining Time",
+        "file_progress_title": "📄 Current File Progress:",
+        "overall_progress_title": "📊 Overall Queue Progress:",
         "log_header": "📝 Log Console:",
         "log_ready": "Ready for operation.",
         "log_cleared": "Logs cleared.",
@@ -260,7 +206,7 @@ TRANSLATIONS = {
         "clear_log": "Clear Logs",
         "completed_badge": "✅ Completed",
         "error_badge": "❌ Download Error",
-        "paused_badge": "⚠️ Paused (Resume ok)",
+        "paused_badge": "⚠️ Paused",
         "downloading_badge": "🔵 Downloading...",
         "empty_folder": "⚠️ Empty folder or no files found.",
         "file_unit": "file",
@@ -329,7 +275,7 @@ class TreeNode:
         
         # State tracking
         self.var_checked = ctk.BooleanVar(value=True)
-        self.expanded = True  # Expanded by default so all rows & badges render and update live!
+        self.expanded = False  # Collapsed by default to prevent UI lag on huge folders!
         self.status = "pending"  # 'pending', 'downloading', 'completed', 'error', 'paused'
         self.status_text = ""
         self.progress_value = 0.0  # 0.0 to 1.0
@@ -374,8 +320,8 @@ class GDriveApp(ctk.CTk):
         super().__init__()
 
         self.title(f"{APP_NAME} ({APP_VERSION}) - {DEVELOPER_NAME_VI}")
-        self.geometry("980x800")
-        self.minsize(850, 640)
+        self.geometry("980x830")
+        self.minsize(850, 680)
 
         # Set Window Icon
         icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
@@ -708,7 +654,7 @@ class GDriveApp(ctk.CTk):
         stats_frame.grid(row=3, column=0, padx=15, pady=5, sticky="ew")
         stats_frame.grid_columnconfigure(0, weight=1)
 
-        # File currently downloading
+        # Row 0: File currently downloading
         self.lbl_current_file = ctk.CTkLabel(
             stats_frame,
             text=self.t("status_ready"),
@@ -718,9 +664,41 @@ class GDriveApp(ctk.CTk):
         )
         self.lbl_current_file.grid(row=0, column=0, padx=15, pady=(10, 2), sticky="w")
 
-        # Clean 4 Cards Grid
+        # Row 1: Dual Progress Energy Bars (% File & % Overall Queue)
+        progress_bar_frame = ctk.CTkFrame(stats_frame, fg_color="transparent")
+        progress_bar_frame.grid(row=1, column=0, padx=15, pady=(2, 6), sticky="ew")
+        progress_bar_frame.grid_columnconfigure(0, weight=1)
+        progress_bar_frame.grid_columnconfigure(1, weight=1)
+
+        # File Progress Bar Box
+        p1_box = ctk.CTkFrame(progress_bar_frame, fg_color="#f1f5f9", corner_radius=6)
+        p1_box.grid(row=0, column=0, padx=(0, 4), sticky="ew")
+        p1_header = ctk.CTkFrame(p1_box, fg_color="transparent")
+        p1_header.pack(fill="x", padx=10, pady=(6, 2))
+        self.lbl_p1_title = ctk.CTkLabel(p1_header, text=self.t("file_progress_title"), font=ctk.CTkFont(size=11, weight="bold"), text_color="#334155")
+        self.lbl_p1_title.pack(side="left")
+        self.lbl_file_pct = ctk.CTkLabel(p1_header, text="0.0%", font=ctk.CTkFont(size=11, weight="bold"), text_color="#0284c7")
+        self.lbl_file_pct.pack(side="right")
+        self.bar_file = ctk.CTkProgressBar(p1_box, height=10, corner_radius=5, fg_color="#cbd5e1", progress_color="#0284c7")
+        self.bar_file.set(0.0)
+        self.bar_file.pack(fill="x", padx=10, pady=(0, 8))
+
+        # Overall Queue Progress Bar Box
+        p2_box = ctk.CTkFrame(progress_bar_frame, fg_color="#f1f5f9", corner_radius=6)
+        p2_box.grid(row=0, column=1, padx=(4, 0), sticky="ew")
+        p2_header = ctk.CTkFrame(p2_box, fg_color="transparent")
+        p2_header.pack(fill="x", padx=10, pady=(6, 2))
+        self.lbl_p2_title = ctk.CTkLabel(p2_header, text=self.t("overall_progress_title"), font=ctk.CTkFont(size=11, weight="bold"), text_color="#334155")
+        self.lbl_p2_title.pack(side="left")
+        self.lbl_overall_pct = ctk.CTkLabel(p2_header, text="0.0%", font=ctk.CTkFont(size=11, weight="bold"), text_color="#16a34a")
+        self.lbl_overall_pct.pack(side="right")
+        self.bar_overall = ctk.CTkProgressBar(p2_box, height=10, corner_radius=5, fg_color="#cbd5e1", progress_color="#16a34a")
+        self.bar_overall.set(0.0)
+        self.bar_overall.pack(fill="x", padx=10, pady=(0, 8))
+
+        # Row 2: Clean 4 Cards Grid
         cards_frame = ctk.CTkFrame(stats_frame, fg_color="transparent")
-        cards_frame.grid(row=1, column=0, padx=15, pady=(6, 12), sticky="ew")
+        cards_frame.grid(row=2, column=0, padx=15, pady=(4, 12), sticky="ew")
         for i in range(4):
             cards_frame.grid_columnconfigure(i, weight=1)
 
@@ -1100,6 +1078,9 @@ class GDriveApp(ctk.CTk):
         self.btn_retry.configure(text=self.t("retry_failed"))
         self.btn_cancel.configure(text=self.t("cancel_download"))
 
+        self.lbl_p1_title.configure(text=self.t("file_progress_title"))
+        self.lbl_p2_title.configure(text=self.t("overall_progress_title"))
+
         self.lbl_c1_title.configure(text=self.t("speed"))
         self.lbl_c2_title.configure(text=self.t("file_size"))
         self.lbl_c3_title.configure(text=self.t("queue_status"))
@@ -1333,18 +1314,23 @@ class GDriveApp(ctk.CTk):
         if node.status == "completed":
             badge_fg = "#28a745"
             text_col = "#ffffff"
-            badge_text = self.t("completed_badge")
+            if not badge_text:
+                badge_text = self.t("completed_badge")
         elif node.status == "error":
             badge_fg = "#dc3545"
             text_col = "#ffffff"
-            badge_text = self.t("error_badge")
+            if not badge_text:
+                badge_text = self.t("error_badge")
         elif node.status == "paused":
             badge_fg = "#ffc107"
             text_col = "#000000"
-            badge_text = self.t("paused_badge")
+            if not badge_text:
+                badge_text = self.t("paused_badge")
         elif node.status == "downloading":
             badge_fg = "#0284c7"
             text_col = "#ffffff"
+            if not badge_text:
+                badge_text = self.t("downloading_badge")
 
         lbl_badge = ctk.CTkLabel(
             row_frame,
@@ -1440,6 +1426,8 @@ class GDriveApp(ctk.CTk):
             border_color = "#bae6fd"
             badge_fg = "#0284c7"
             text_col = "#ffffff"
+            if not status_text:
+                status_text = self.t("downloading_badge")
 
         if node.frame_widget and node.frame_widget.winfo_exists():
             node.frame_widget.configure(fg_color=bg_color, border_color=border_color)
@@ -1551,10 +1539,14 @@ class GDriveApp(ctk.CTk):
         self.btn_scan.configure(state="disabled")
         self.btn_cancel.configure(state="normal")
 
-        # Reset stats
+        # Reset stats & progress bars
         self.lbl_val_speed.configure(text="0 KB/s")
         self.lbl_val_file_size.configure(text="0 B / 0 B")
         self.lbl_val_eta.configure(text="--:--")
+        self.bar_file.set(0.0)
+        self.lbl_file_pct.configure(text="0.0%")
+        self.bar_overall.set(0.0)
+        self.lbl_overall_pct.configure(text="0.0%")
 
         # Launch download in background thread
         self.download_thread = threading.Thread(
@@ -1596,7 +1588,8 @@ class GDriveApp(ctk.CTk):
                 file_disp_name = node.name
                 self.log(self.t("log_downloading_item").format(idx=index, total=total_count, name=file_disp_name))
 
-                self._update_node_status_ui(node, status="downloading", status_text="🔵 0%", progress_val=0.0)
+                # Pure status text without percentage in tree list badge
+                self._update_node_status_ui(node, status="downloading", status_text=self.t("downloading_badge"), progress_val=0.0)
 
                 self.after(0, lambda idx=index, name=file_disp_name, total=total_count: (
                     self.lbl_current_file.configure(text=self.t("downloading_status").format(idx=idx, total=total, name=name))
@@ -1618,14 +1611,20 @@ class GDriveApp(ctk.CTk):
                     eta_str = GDriveService.format_time(eta_sec)
                     overall_str = f"{index}/{total_count} {self.t('file_unit')}"
 
-                    node_status_str = f"🔵 {int(percent)}%"
-                    self._update_node_status_ui(node, status="downloading", status_text=node_status_str, progress_val=percent/100.0)
+                    file_pct_val = min(max(percent / 100.0, 0.0), 1.0)
+                    completed_file_units = (index - 1) + file_pct_val
+                    overall_pct_val = min(max(completed_file_units / total_count, 0.0), 1.0)
+                    overall_pct = overall_pct_val * 100.0
 
-                    self.after(0, lambda: (
+                    self.after(0, lambda f_val=file_pct_val, f_pct=percent, o_val=overall_pct_val, o_pct=overall_pct: (
                         self.lbl_val_speed.configure(text=speed_str),
                         self.lbl_val_file_size.configure(text=file_size_str),
                         self.lbl_val_overall.configure(text=overall_str),
-                        self.lbl_val_eta.configure(text=eta_str)
+                        self.lbl_val_eta.configure(text=eta_str),
+                        self.bar_file.set(f_val),
+                        self.lbl_file_pct.configure(text=f"{f_pct:.1f}%"),
+                        self.bar_overall.set(o_val),
+                        self.lbl_overall_pct.configure(text=f"{o_pct:.1f}%")
                     ))
 
                 try:
@@ -1637,6 +1636,16 @@ class GDriveApp(ctk.CTk):
                     )
 
                     self._update_node_status_ui(node, status="completed", status_text=self.t("completed_badge"), progress_val=1.0)
+                    
+                    # Update progress bars upon file completion
+                    overall_pct_val = min(max(index / total_count, 0.0), 1.0)
+                    self.after(0, lambda o_val=overall_pct_val, idx=index: (
+                        self.bar_file.set(1.0),
+                        self.lbl_file_pct.configure(text="100.0%"),
+                        self.bar_overall.set(o_val),
+                        self.lbl_overall_pct.configure(text=f"{(o_val * 100.0):.1f}%")
+                    ))
+
                     self.log(self.t("log_downloaded_item").format(idx=index, total=total_count, name=os.path.basename(saved_path)))
 
                 except DownloadCancelledException:
@@ -1670,6 +1679,10 @@ class GDriveApp(ctk.CTk):
             self.lbl_val_eta.configure(text="00:00")
             if success:
                 self.lbl_current_file.configure(text=self.t("status_finished"))
+                self.bar_file.set(1.0)
+                self.lbl_file_pct.configure(text="100.0%")
+                self.bar_overall.set(1.0)
+                self.lbl_overall_pct.configure(text="100.0%")
                 messagebox.showinfo("Notification", message)
             else:
                 self.lbl_current_file.configure(text=self.t("status_error"))
