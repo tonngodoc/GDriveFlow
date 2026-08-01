@@ -1,5 +1,5 @@
 """
-Build script to compile DriveFlow Pro into a single standalone Windows DriveFlow.exe file
+Build script to compile GDrive Flow into a single standalone Windows GDriveFlow.exe file
 """
 import os
 import subprocess
@@ -12,7 +12,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 def build_exe():
     print("=" * 60)
-    print("  Building DriveFlow Pro (v1.8.0) to a Single Standalone .exe file...")
+    print("  Building GDrive Flow (v1.9.0) to a Single Standalone .exe file...")
     print("  Developed by TON NGO DOC")
     print("=" * 60)
 
@@ -23,17 +23,28 @@ def build_exe():
     except ImportError:
         add_data_ctk = None
 
+    icon_file = "icon.ico"
+    png_icon = "icon.png"
+
     cmd = [
         sys.executable, "-m", "PyInstaller",
         "--noconfirm",
         "--onefile",      # Single standalone .exe file
         "--windowed",     # Native GUI app (no black CMD console window)
-        "--name=DriveFlow",
+        "--name=GDriveFlow",
         "--clean",
     ]
 
+    if os.path.exists(icon_file):
+        cmd.extend(["--icon", icon_file])
+
     if add_data_ctk:
         cmd.extend(["--add-data", add_data_ctk])
+
+    if os.path.exists(icon_file):
+        cmd.extend(["--add-data", f"{icon_file}{os.pathsep}."])
+    if os.path.exists(png_icon):
+        cmd.extend(["--add-data", f"{png_icon}{os.pathsep}."])
 
     cmd.append("main.py")
 
@@ -41,8 +52,8 @@ def build_exe():
     result = subprocess.run(cmd)
 
     if result.returncode == 0:
-        dist_exe = os.path.abspath(os.path.join("dist", "DriveFlow.exe"))
-        root_exe = os.path.abspath("DriveFlow.exe")
+        dist_exe = os.path.abspath(os.path.join("dist", "GDriveFlow.exe"))
+        root_exe = os.path.abspath("GDriveFlow.exe")
 
         copied = False
         if os.path.exists(dist_exe):
@@ -50,7 +61,7 @@ def build_exe():
                 shutil.copy(dist_exe, root_exe)
                 copied = True
             except PermissionError:
-                print(f"\n⚠️ Notice: Could not overwrite '{root_exe}' because DriveFlow.exe is currently running.")
+                print(f"\n⚠️ Notice: Could not overwrite '{root_exe}' because GDriveFlow.exe is currently running.")
                 print(f"   The updated binary was built successfully and is ready at: '{dist_exe}'")
 
         print("\n" + "=" * 60)

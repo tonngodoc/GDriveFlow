@@ -6,19 +6,20 @@ import webbrowser
 from typing import Optional, List, Tuple
 from tkinter import filedialog, messagebox
 import customtkinter as ctk
+from PIL import Image
 
 from gdrive_service import GDriveService, GDriveItem, DownloadCancelledException
 
 # Application Metadata
-APP_NAME = "DriveFlow Pro"
-APP_VERSION = "v1.8.0"
+APP_NAME = "GDrive Flow"
+APP_VERSION = "v1.9.0"
 DEVELOPER_NAME_VI = "Phát triển bởi TÔN NGỘ ĐỘC"
 DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
 
 # Multilingual Translation Dictionary
 TRANSLATIONS = {
     "vi": {
-        "title": "DriveFlow Pro",
+        "title": "GDrive Flow",
         "developer": DEVELOPER_NAME_VI,
         "version": "Phiên bản",
         "report_bug": "🐛 Báo Lỗi",
@@ -84,14 +85,14 @@ TRANSLATIONS = {
 
         # Bug Report Dialog
         "report_title": "Báo Lỗi Ứng Dụng (Bug Report)",
-        "report_desc": "Nếu gặp sự cố hoặc lỗi khi sử dụng DriveFlow Pro, bạn có thể sao chép nhật ký (logs) hoặc mở trang GitHub Issues để gửi báo cáo.",
+        "report_desc": "Nếu gặp sự cố hoặc lỗi khi sử dụng GDrive Flow, bạn có thể sao chép nhật ký (logs) hoặc mở trang GitHub Issues để gửi báo cáo.",
         "report_copy_log": "📋 Sao Chép Log Lỗi",
         "report_open_github": "🌐 Mở GitHub Issues",
         "report_copied_msg": "Đã sao chép nội dung log vào Clipboard!",
         "report_close": "Đóng"
     },
     "en": {
-        "title": "DriveFlow Pro",
+        "title": "GDrive Flow",
         "developer": DEVELOPER_NAME_EN,
         "version": "Version",
         "report_bug": "🐛 Report Bug",
@@ -157,7 +158,7 @@ TRANSLATIONS = {
 
         # Bug Report Dialog
         "report_title": "Application Bug Report",
-        "report_desc": "If you encounter any issues with DriveFlow Pro, you can copy the error log or open GitHub Issues to submit a bug report.",
+        "report_desc": "If you encounter any issues with GDrive Flow, you can copy the error log or open GitHub Issues to submit a bug report.",
         "report_copy_log": "📋 Copy Error Log",
         "report_open_github": "🌐 Open GitHub Issues",
         "report_copied_msg": "Log contents copied to Clipboard!",
@@ -229,6 +230,14 @@ class GDriveApp(ctk.CTk):
         self.geometry("980x800")
         self.minsize(850, 640)
 
+        # Set Window Icon
+        icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
+        if os.path.exists(icon_path):
+            try:
+                self.iconbitmap(icon_path)
+            except Exception:
+                pass
+
         # Active Language State ('vi' or 'en')
         self.current_lang = "vi"
 
@@ -275,9 +284,19 @@ class GDriveApp(ctk.CTk):
         left_header = ctk.CTkFrame(title_subframe, fg_color="transparent")
         left_header.pack(side="left")
 
+        # Load Logo image icon
+        png_icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
+        if os.path.exists(png_icon_path):
+            try:
+                logo_img = ctk.CTkImage(light_image=Image.open(png_icon_path), dark_image=Image.open(png_icon_path), size=(28, 28))
+                lbl_logo = ctk.CTkLabel(left_header, image=logo_img, text="")
+                lbl_logo.pack(side="left", padx=(0, 8))
+            except Exception:
+                pass
+
         title_label = ctk.CTkLabel(
             left_header, 
-            text=f"⚡ {APP_NAME}", 
+            text=f"{APP_NAME}", 
             font=ctk.CTkFont(size=20, weight="bold"),
             text_color="#1f6aa5"
         )
@@ -302,15 +321,16 @@ class GDriveApp(ctk.CTk):
         )
         self.lbl_developer.pack(side="left", padx=8)
 
-        # Language Switcher Segmented Button
+        # Language Switcher Segmented Button (Only flag icons!)
         self.seg_lang = ctk.CTkSegmentedButton(
             title_subframe,
-            values=["🇻🇳 Tiếng Việt", "🇬🇧 English"],
+            values=["🇻🇳", "🇬🇧"],
             command=self._on_change_language,
-            font=ctk.CTkFont(size=12, weight="bold"),
-            selected_color="#0284c7"
+            font=ctk.CTkFont(size=14, weight="bold"),
+            selected_color="#0284c7",
+            width=80
         )
-        self.seg_lang.set("🇻🇳 Tiếng Việt")
+        self.seg_lang.set("🇻🇳")
         self.seg_lang.pack(side="right")
 
         # Report Bug Button
@@ -322,7 +342,7 @@ class GDriveApp(ctk.CTk):
             fg_color="#ef4444",
             hover_color="#dc2626",
             height=28,
-            width=110
+            width=105
         )
         self.btn_report.pack(side="right", padx=(0, 10))
 
@@ -595,6 +615,14 @@ class GDriveApp(ctk.CTk):
         dialog.resizable(False, False)
         dialog.grab_set()
 
+        # Set dialog icon if available
+        icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
+        if os.path.exists(icon_path):
+            try:
+                dialog.iconbitmap(icon_path)
+            except Exception:
+                pass
+
         lbl_title = ctk.CTkLabel(
             dialog,
             text=f"🐛 {self.t('report_title')}",
@@ -647,7 +675,7 @@ class GDriveApp(ctk.CTk):
             self.after(3000, lambda: lbl_feedback.configure(text=""))
 
         def open_github():
-            webbrowser.open("https://github.com/tonngodoc/DriveFlow/issues/new")
+            webbrowser.open("https://github.com/tonngodoc/GDriveFlow/issues/new")
 
         btn_copy = ctk.CTkButton(
             btn_frame,
@@ -682,7 +710,7 @@ class GDriveApp(ctk.CTk):
 
     def _on_change_language(self, selected_val: str):
         """Switches active language between Vietnamese and English."""
-        if "English" in selected_val:
+        if "🇬🇧" in selected_val:
             self.current_lang = "en"
         else:
             self.current_lang = "vi"
