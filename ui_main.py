@@ -12,9 +12,100 @@ from gdrive_service import GDriveService, GDriveItem, DownloadCancelledException
 
 # Application Metadata
 APP_NAME = "GDrive Flow"
-APP_VERSION = "v2.0.0"
+APP_VERSION = "v2.1.0"
 DEVELOPER_NAME_VI = "Phát triển bởi TÔN NGỘ ĐỘC"
 DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
+
+# Release History / Changelog
+CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release History)
+
+--------------------------------------------------
+📌 Phiên Bản v2.1.0 (Hiện tại)
+--------------------------------------------------
+- 💳 Cập nhật thông tin Donate chính thức:
+  • Ngân hàng: TPBank (Ngân hàng Tiên Phong)
+  • Chủ tài khoản: Nguyen Ngoc Thai Ha
+  • Số tài khoản (STK): 64608121989
+- 🇻🇳🇬🇧 Tích hợp biểu tượng icon Cờ Việt Nam & Cờ Anh Quốc sắc nét trên thanh chuyển ngôn ngữ.
+- 🛈 Bấm vào nhãn Phiên bản (Version Badge) để xem nhật ký cập nhật ứng dụng trực tiếp.
+
+--------------------------------------------------
+📌 Phiên Bản v2.0.0
+--------------------------------------------------
+- 💖 Tích hợp cửa sổ popup Donate ủng hộ tác giả.
+- 🌐 Cập nhật repository GitHub chính thức: https://github.com/tonngodoc/GDriveFlow
+
+--------------------------------------------------
+📌 Phiên Bản v1.9.0
+--------------------------------------------------
+- 🌊 Chính thức đổi tên thương hiệu ứng dụng thành GDrive Flow.
+- 🖼️ Thiết kế Logo thương hiệu mới kết hợp biểu tượng Google Drive và luồng tải sóng động.
+
+--------------------------------------------------
+📌 Phiên Bản v1.8.0
+--------------------------------------------------
+- 🐛 Thêm tính năng Báo Lỗi Ứng Dụng (Bug Report) tích hợp sao chép Log và mở GitHub Issues.
+- 🌐 Dịch 100% nhật ký (Logs), cây thư mục, thẻ tiến trình và thông báo sang tiếng Anh chuẩn xác.
+
+--------------------------------------------------
+📌 Phiên Bản v1.7.0
+--------------------------------------------------
+- 🛑 Khắc phục 100% lỗi nút 'Dừng Tải' không dừng được với ngoại lệ DownloadCancelledException.
+- ⚡ Thoát tức thì giải phóng giao diện trong 0.001s khi hủy tải.
+
+--------------------------------------------------
+📌 Phiên Bản v1.6.0 & Cũ Hơn
+--------------------------------------------------
+- 🌐 Hỗ trợ đa ngôn ngữ Tiếng Việt & English.
+- 🔄 Thêm tính năng Tải Lại File Lỗi (Retry Failed Downloads).
+- ⚡ Tối ưu cập nhật thẻ tiến trình Badge O(1) loại bỏ giật lag.
+- 🧹 Tự động chuẩn hóa tên file & đường dẫn thư mục tránh lỗi Windows.
+"""
+
+CHANGELOG_TEXT_EN = """🌊 GDrive Flow - Version Release History
+
+--------------------------------------------------
+📌 Version v2.1.0 (Current)
+--------------------------------------------------
+- 💳 Updated official Donate info:
+  • Bank: TPBank (Tiên Phong Bank)
+  • Account Holder: Nguyen Ngoc Thai Ha
+  • Account Number (STK): 64608121989
+- 🇻🇳🇬🇧 Added crisp flag icons for Vietnam & United Kingdom on language selector bar.
+- 🛈 Clickable Version Badge to view app release history log directly.
+
+--------------------------------------------------
+📌 Version v2.0.0
+--------------------------------------------------
+- 💖 Integrated interactive Donate popup window for supporting developer.
+- 🌐 Updated official GitHub repository: https://github.com/tonngodoc/GDriveFlow
+
+--------------------------------------------------
+📌 Version v1.9.0
+--------------------------------------------------
+- 🌊 Rebranded official app name to GDrive Flow.
+- 🖼️ Designed new brand logo blending Google Drive icon with dynamic flow wave aesthetics.
+
+--------------------------------------------------
+📌 Version v1.8.0
+--------------------------------------------------
+- 🐛 Added Interactive Bug Report feature with log copy and GitHub Issues integration.
+- 🌐 100% Full English localization across all system logs, tree badges, and notifications.
+
+--------------------------------------------------
+📌 Version v1.7.0
+--------------------------------------------------
+- 🛑 Fixed 100% cancellation unblocking using DownloadCancelledException.
+- ⚡ Instant UI thread release in 0.001s upon download cancellation.
+
+--------------------------------------------------
+📌 Version v1.6.0 & Earlier
+--------------------------------------------------
+- 🌐 Multi-language support (Vietnamese & English).
+- 🔄 Added Retry Failed Downloads feature.
+- ⚡ O(1) Status Badge real-time progress updates.
+- 🧹 Automatic filename & directory sanitization for Windows filesystem safety.
+"""
 
 # Multilingual Translation Dictionary
 TRANSLATIONS = {
@@ -94,13 +185,17 @@ TRANSLATIONS = {
 
         # Donate Dialog
         "donate_title": "Ủng Hộ Tác Giả (Donate)",
-        "donate_desc": "Nếu bạn cảm thấy ứng dụng GDrive Flow hữu ích, bạn có thể mời tác giả TÔN NGỘ ĐỘC một ly cà phê qua tài khoản ngân hàng bên dưới:",
+        "donate_desc": "Nếu bạn cảm thấy ứng dụng GDrive Flow hữu ích, bạn có thể ủng hộ tác giả qua tài khoản ngân hàng bên dưới:",
         "donate_bank_name": "Ngân hàng:",
         "donate_holder": "Chủ tài khoản:",
-        "donate_account": "Số TK / Nickname:",
-        "donate_copy_btn": "📋 Sao Chép Nickname STK",
-        "donate_copied_msg": "Đã sao chép nickname 'tonngodoc' vào Clipboard!",
-        "donate_close": "Đóng"
+        "donate_account": "Số tài khoản (STK):",
+        "donate_copy_btn": "📋 Sao Chép STK",
+        "donate_copied_msg": "Đã sao chép STK '64608121989' vào Clipboard!",
+        "donate_close": "Đóng",
+
+        # Changelog Dialog
+        "changelog_title": "Lịch Sử Cập Nhật Phiên Bản (Changelog)",
+        "changelog_open_github": "🌐 Trang GitHub Project"
     },
     "en": {
         "title": "GDrive Flow",
@@ -178,13 +273,17 @@ TRANSLATIONS = {
 
         # Donate Dialog
         "donate_title": "Support Developer (Donate)",
-        "donate_desc": "If you find GDrive Flow helpful, consider buying developer TON NGO DOC a coffee via bank details below:",
+        "donate_desc": "If you find GDrive Flow helpful, consider supporting the developer via bank details below:",
         "donate_bank_name": "Bank Name:",
         "donate_holder": "Account Holder:",
-        "donate_account": "Account Nickname:",
-        "donate_copy_btn": "📋 Copy Account Nickname",
-        "donate_copied_msg": "Account nickname 'tonngodoc' copied to Clipboard!",
-        "donate_close": "Close"
+        "donate_account": "Account Number (STK):",
+        "donate_copy_btn": "📋 Copy Account Number",
+        "donate_copied_msg": "Account number '64608121989' copied to Clipboard!",
+        "donate_close": "Close",
+
+        # Changelog Dialog
+        "changelog_title": "Version Release History (Changelog)",
+        "changelog_open_github": "🌐 Open GitHub Repository"
     }
 }
 
@@ -324,15 +423,20 @@ class GDriveApp(ctk.CTk):
         )
         title_label.pack(side="left")
 
-        version_label = ctk.CTkLabel(
+        # Interactive Version Badge (Clickable -> opens Changelog window!)
+        self.version_btn = ctk.CTkButton(
             left_header,
-            text=f" {APP_VERSION}",
+            text=f" {APP_VERSION} 🛈",
             font=ctk.CTkFont(size=12, weight="bold"),
             fg_color="#e2e8f0",
-            text_color="#475569",
-            corner_radius=6
+            hover_color="#cbd5e1",
+            text_color="#1e293b",
+            corner_radius=6,
+            height=24,
+            width=70,
+            command=self._open_changelog_dialog
         )
-        version_label.pack(side="left", padx=8)
+        self.version_btn.pack(side="left", padx=8)
 
         # Developer Credit Tag Requirement
         self.lbl_developer = ctk.CTkLabel(
@@ -343,17 +447,47 @@ class GDriveApp(ctk.CTk):
         )
         self.lbl_developer.pack(side="left", padx=8)
 
-        # Language Switcher Segmented Button (Only flag icons!)
-        self.seg_lang = ctk.CTkSegmentedButton(
-            title_subframe,
-            values=["🇻🇳", "🇬🇧"],
-            command=self._on_change_language,
-            font=ctk.CTkFont(size=14, weight="bold"),
-            selected_color="#0284c7",
-            width=80
+        # Language Switcher with Flag Icons
+        lang_frame = ctk.CTkFrame(title_subframe, fg_color="#e2e8f0", corner_radius=6)
+        lang_frame.pack(side="right")
+
+        flag_vn_path = os.path.join(os.path.dirname(__file__), "flag_vn.png")
+        flag_en_path = os.path.join(os.path.dirname(__file__), "flag_en.png")
+
+        self.img_flag_vi = ctk.CTkImage(light_image=Image.open(flag_vn_path), dark_image=Image.open(flag_vn_path), size=(22, 14)) if os.path.exists(flag_vn_path) else None
+        self.img_flag_en = ctk.CTkImage(light_image=Image.open(flag_en_path), dark_image=Image.open(flag_en_path), size=(22, 14)) if os.path.exists(flag_en_path) else None
+
+        self.btn_flag_vi = ctk.CTkButton(
+            lang_frame,
+            text=" 🇻🇳",
+            image=self.img_flag_vi,
+            compound="left",
+            width=42,
+            height=28,
+            corner_radius=5,
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color="#0284c7",
+            text_color="#ffffff",
+            hover_color="#0369a1",
+            command=lambda: self._set_language("vi")
         )
-        self.seg_lang.set("🇻🇳")
-        self.seg_lang.pack(side="right")
+        self.btn_flag_vi.pack(side="left", padx=2, pady=2)
+
+        self.btn_flag_en = ctk.CTkButton(
+            lang_frame,
+            text=" 🇬🇧",
+            image=self.img_flag_en,
+            compound="left",
+            width=42,
+            height=28,
+            corner_radius=5,
+            font=ctk.CTkFont(size=11, weight="bold"),
+            fg_color="transparent",
+            text_color="#475569",
+            hover_color="#cbd5e1",
+            command=lambda: self._set_language("en")
+        )
+        self.btn_flag_en.pack(side="left", padx=2, pady=2)
 
         # Donate Button
         self.btn_donate = ctk.CTkButton(
@@ -642,6 +776,84 @@ class GDriveApp(ctk.CTk):
             text_color="#f8fafc"
         )
 
+    def _set_language(self, lang_code: str):
+        """Sets active language and updates flag button styles."""
+        if lang_code == "en":
+            self.current_lang = "en"
+            self.btn_flag_en.configure(fg_color="#0284c7", text_color="#ffffff", hover_color="#0369a1")
+            self.btn_flag_vi.configure(fg_color="transparent", text_color="#475569", hover_color="#cbd5e1")
+        else:
+            self.current_lang = "vi"
+            self.btn_flag_vi.configure(fg_color="#0284c7", text_color="#ffffff", hover_color="#0369a1")
+            self.btn_flag_en.configure(fg_color="transparent", text_color="#475569", hover_color="#cbd5e1")
+
+        self._on_change_language_update_ui()
+
+    def _open_changelog_dialog(self):
+        """Opens interactive Changelog Release History modal window."""
+        dialog = ctk.CTkToplevel(self)
+        dialog.title(self.t("changelog_title"))
+        dialog.geometry("580x480")
+        dialog.resizable(False, False)
+        dialog.grab_set()
+
+        # Set dialog icon if available
+        icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
+        if os.path.exists(icon_path):
+            try:
+                dialog.iconbitmap(icon_path)
+            except Exception:
+                pass
+
+        lbl_title = ctk.CTkLabel(
+            dialog,
+            text=f"📋 {self.t('changelog_title')}",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#1f6aa5"
+        )
+        lbl_title.pack(padx=20, pady=(16, 6), anchor="w")
+
+        txt_changelog = ctk.CTkTextbox(
+            dialog,
+            font=ctk.CTkFont(family="Consolas", size=11),
+            height=340,
+            wrap="word",
+            fg_color="#1e293b",
+            text_color="#f8fafc"
+        )
+        txt_changelog.pack(padx=20, pady=5, fill="both", expand=True)
+
+        changelog_content = CHANGELOG_TEXT_EN if self.current_lang == "en" else CHANGELOG_TEXT_VI
+        txt_changelog.insert("1.0", changelog_content)
+        txt_changelog.configure(state="disabled")
+
+        btn_frame = ctk.CTkFrame(dialog, fg_color="transparent")
+        btn_frame.pack(padx=20, pady=(8, 14), fill="x")
+
+        def open_github_releases():
+            webbrowser.open("https://github.com/tonngodoc/GDriveFlow")
+
+        btn_gh = ctk.CTkButton(
+            btn_frame,
+            text=self.t("changelog_open_github"),
+            font=ctk.CTkFont(size=12, weight="bold"),
+            command=open_github_releases,
+            fg_color="#0284c7",
+            hover_color="#0369a1"
+        )
+        btn_gh.pack(side="left")
+
+        btn_close = ctk.CTkButton(
+            btn_frame,
+            text=self.t("donate_close"),
+            font=ctk.CTkFont(size=12),
+            command=dialog.destroy,
+            fg_color="#64748b",
+            hover_color="#475569",
+            width=90
+        )
+        btn_close.pack(side="right")
+
     def _open_donate_dialog(self):
         """Opens interactive Donate modal window."""
         dialog = ctk.CTkToplevel(self)
@@ -690,13 +902,13 @@ class GDriveApp(ctk.CTk):
         r2 = ctk.CTkFrame(card_frame, fg_color="transparent")
         r2.pack(fill="x", padx=15, pady=6)
         ctk.CTkLabel(r2, text="👤 " + self.t("donate_holder"), font=ctk.CTkFont(size=13, weight="bold"), text_color="#334155").pack(side="left")
-        ctk.CTkLabel(r2, text="TÔN NGỘ ĐỘC", font=ctk.CTkFont(size=13, weight="bold"), text_color="#16a34a").pack(side="right")
+        ctk.CTkLabel(r2, text="Nguyen Ngoc Thai Ha", font=ctk.CTkFont(size=13, weight="bold"), text_color="#16a34a").pack(side="right")
 
-        # Row 3: Account Nickname / Number
+        # Row 3: Account STK
         r3 = ctk.CTkFrame(card_frame, fg_color="transparent")
         r3.pack(fill="x", padx=15, pady=(6, 12))
         ctk.CTkLabel(r3, text="💳 " + self.t("donate_account"), font=ctk.CTkFont(size=13, weight="bold"), text_color="#334155").pack(side="left")
-        ctk.CTkLabel(r3, text="tonngodoc", font=ctk.CTkFont(size=16, weight="bold"), text_color="#ec4899").pack(side="right")
+        ctk.CTkLabel(r3, text="64608121989", font=ctk.CTkFont(size=16, weight="bold"), text_color="#ec4899").pack(side="right")
 
         # Feedback Message
         lbl_feedback = ctk.CTkLabel(
@@ -713,7 +925,7 @@ class GDriveApp(ctk.CTk):
 
         def copy_account():
             self.clipboard_clear()
-            self.clipboard_append("tonngodoc")
+            self.clipboard_append("64608121989")
             lbl_feedback.configure(text=self.t("donate_copied_msg"))
             self.after(3000, lambda: lbl_feedback.configure(text=""))
 
@@ -841,13 +1053,8 @@ class GDriveApp(ctk.CTk):
         )
         btn_close.pack(side="right")
 
-    def _on_change_language(self, selected_val: str):
-        """Switches active language between Vietnamese and English."""
-        if "🇬🇧" in selected_val:
-            self.current_lang = "en"
-        else:
-            self.current_lang = "vi"
-
+    def _on_change_language_update_ui(self):
+        """Updates all dynamic text elements on language change."""
         # Update window title
         self.title(f"{APP_NAME} ({APP_VERSION}) - {self.t('developer')}")
 

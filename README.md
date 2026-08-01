@@ -1,4 +1,4 @@
-# 🌊 GDrive Flow (v2.0.0) - Windows Desktop Application
+# 🌊 GDrive Flow (v2.1.0) - Windows Desktop Application
 
 ![GDrive Flow Logo](icon.png)
 
@@ -8,16 +8,15 @@
 
 ---
 
-## ✨ Tính Năng Nổi Bật (Phiên Bản v2.0.0)
+## ✨ Tính Năng Nổi Bật (Phiên Bản v2.1.0)
 
-1. **Tính Năng Ủng Hộ Tác Giả (Donate Dialog Integration)**:
-   - Nút **`💖 Donate`** trực quan trên giao diện ứng dụng.
-   - Hỗ trợ xem thông tin chuyển khoản qua ngân hàng **TPBank** (Nickname: `tonngodoc`) kèm nút sao chép nhanh.
-2. **Đổi Tên Thương Hiệu & Logo Mới (GDrive Flow Branding)**:
-   - Chính thức chuyển địa chỉ GitHub Repository thành **[https://github.com/tonngodoc/GDriveFlow](https://github.com/tonngodoc/GDriveFlow)**.
-   - Logo thương hiệu kết hợp biểu tượng Google Drive và luồng tải sóng động hiện đại.
-3. **Tối Ưu Bộ Chuyển Đổi Ngôn Ngữ Tinh Gọn**:
-   - Chuyển đổi ngôn ngữ rút gọn hiển thị bằng biểu tượng cờ (`🇻🇳` / `🇬🇧`) tinh tế, tối ưu diện tích giao diện.
+1. **Cập Nhật Thông Tin Donate Chính Thức**:
+   - Nút **`💖 Donate`** hiển thị cửa sổ ủng hộ tác giả qua ngân hàng **TPBank**.
+   - **Chủ tài khoản**: `Nguyen Ngoc Thai Ha` | **STK**: `64608121989` kèm nút sao chép tự động.
+2. **Biểu Tượng Icon Cờ Song Ngữ (Flag Icons)**:
+   - Tích hợp icon **Cờ Việt Nam** (`🇻🇳`) & **Cờ Anh Quốc** (`🇬🇧`) sắc nét trên thanh công cụ chuyển đổi ngôn ngữ.
+3. **Lịch Sử Cập Nhật Tương Tác (Interactive Version Changelog)**:
+   - Bấm trực tiếp vào nhãn **Phiên Bản (Version Badge)** trên ứng dụng để mở cửa sổ xem toàn bộ lịch sử nâng cấp ứng dụng.
 4. **Tính Năng Báo Lỗi Ứng Dụng (Interactive Bug Report)**:
    - Nút **`🐛 Báo Lỗi`** (**`🐛 Report Bug`**) mở popup báo cáo sự cố trực tiếp.
    - Hỗ trợ sao chép toàn bộ nhật ký lỗi (Error Logs) và liên kết nhanh đến **GitHub Issues**.
@@ -26,11 +25,7 @@
 6. **Khắc Phục Lỗi Dừng Tải & Treo Đơ Giao Diện (Instant Cancellation & Unblocking)**:
    - Sử dụng lớp ngoại lệ đặc biệt `DownloadCancelledException` thoát lập tức khỏi vòng lặp tải `gdown` mà không bị gdown thử lại trong vô hạn.
    - Khi bấm **`🛑 Dừng Tải`**, giao diện lập tức phản hồi và mở lại các nút chức năng trong 0.001s, không gây đơ treo ứng dụng.
-7. **Thông Tin Tác Giả & Bản Quyền**:
-   - Ghi nhận thông tin chính thức: **Phát triển bởi TÔN NGỘ ĐỘC**.
-8. **Tính Năng Tải Lại Các File Lỗi (Retry Failed Downloads)**:
-   - Nút **`🔄 Tải Lại File Lỗi`** tự động lọc và tải lại toàn bộ các file bị đứt nối mạng hoặc lỗi.
-9. **Tự Động Chuẩn Hóa Tên File (Filename Sanitization)**:
+7. **Tự Động Chuẩn Hóa Tên File (Filename Sanitization)**:
    - Tự động thay thế các ký tự đặc biệt không hợp lệ trên Windows (như `:`, `'`, `$`, `!`, `?`, `*`, `<`, `>`, `|`, `"`, `/`, `\`) thành dấu gạch dưới `_`.
 
 ---
@@ -40,8 +35,8 @@
 Nếu ứng dụng **GDrive Flow** giúp ích cho bạn, bạn có thể ủng hộ tác giả một ly cà phê qua tài khoản ngân hàng bên dưới:
 
 - 🏦 **Ngân hàng**: TPBank (Ngân hàng Tiên Phong)
-- 👤 **Chủ tài khoản**: TÔN NGỘ ĐỘC
-- 💳 **Nickname / STK**: `tonngodoc`
+- 👤 **Chủ tài khoản**: Nguyen Ngoc Thai Ha
+- 💳 **Số tài khoản (STK)**: `64608121989`
 
 *Cảm ơn sự ủng hộ chân thành từ bạn để tác giả duy trì và nâng cấp các phiên bản tiếp theo!*
 
@@ -49,9 +44,13 @@ Nếu ứng dụng **GDrive Flow** giúp ích cho bạn, bạn có thể ủng h
 
 ## 📋 Lịch Sử Phiên Bản (Changelog)
 
-- **v2.0.0 (Hiện tại)**:
+- **v2.1.0 (Hiện tại)**:
+  - Cập nhật thông tin Donate: Chủ tài khoản `Nguyen Ngoc Thai Ha`, STK `64608121989`.
+  - Tích hợp biểu tượng icon **Cờ Việt Nam** & **Cờ Anh Quốc** sắc nét trên thanh chuyển ngôn ngữ.
+  - Thêm tính năng bấm vào nhãn Phiên bản (Version Badge) để xem Lịch sử cập nhật (Changelog) tương tác.
+- **v2.0.0**:
   - Cập nhật chính thức URL Repository: `https://github.com/tonngodoc/GDriveFlow`.
-  - Tích hợp nút **`💖 Donate`** hiển thị thông tin ngân hàng TPBank (`tonngodoc`).
+  - Tích hợp nút **`💖 Donate`** hiển thị thông tin ngân hàng TPBank.
 - **v1.9.0**:
   - Đổi tên chính thức thành **GDrive Flow**.
   - Thiết kế và tích hợp Logo thương hiệu mới.
@@ -65,18 +64,6 @@ Nếu ứng dụng **GDrive Flow** giúp ích cho bạn, bạn có thể ủng h
 - **v1.6.0**:
   - Thêm thông tin tác giả **Phát triển bởi TÔN NGỘ ĐỘC**.
   - Tích hợp đa ngôn ngữ song ngữ Tiếng Việt & English kèm nút chuyển đổi tức thì trên giao diện.
-- **v1.5.0**:
-  - Thêm nút **`🔄 Tải Lại File Lỗi`** cho phép lọc và Retry tải lại các tệp bị lỗi.
-- **v1.4.0**:
-  - Chuyển sang cập nhật Badge status O(1), loại bỏ thanh progress bar dòng để triệt tiêu giật lag.
-- **v1.3.0**:
-  - Tự động đổi ký tự đặc biệt (`: ' $ ! ? * < > | " / \`) thành `_`.
-- **v1.2.0**:
-  - Đổi tên ứng dụng thành **DriveFlow Pro**.
-- **v1.1.0**:
-  - Chuyển sang Light Theme (giao diện màu sáng).
-- **v1.0.0**:
-  - Tải tự động folder/file qua thư viện `gdown`.
 
 ---
 

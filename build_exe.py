@@ -12,7 +12,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 def build_exe():
     print("=" * 60)
-    print("  Building GDrive Flow (v2.0.0) to a Single Standalone .exe file...")
+    print("  Building GDrive Flow (v2.1.0) to a Single Standalone .exe file...")
     print("  Developed by TON NGO DOC")
     print("=" * 60)
 
@@ -25,6 +25,8 @@ def build_exe():
 
     icon_file = "icon.ico"
     png_icon = "icon.png"
+    flag_vn = "flag_vn.png"
+    flag_en = "flag_en.png"
 
     cmd = [
         sys.executable, "-m", "PyInstaller",
@@ -45,6 +47,10 @@ def build_exe():
         cmd.extend(["--add-data", f"{icon_file}{os.pathsep}."])
     if os.path.exists(png_icon):
         cmd.extend(["--add-data", f"{png_icon}{os.pathsep}."])
+    if os.path.exists(flag_vn):
+        cmd.extend(["--add-data", f"{flag_vn}{os.pathsep}."])
+    if os.path.exists(flag_en):
+        cmd.extend(["--add-data", f"{flag_en}{os.pathsep}."])
 
     cmd.append("main.py")
 
