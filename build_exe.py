@@ -12,7 +12,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 def build_exe():
     print("=" * 60)
-    print("  Building GDrive Flow (v2.2.0) to a Single Standalone .exe file...")
+    print("  Building GDrive Flow (v2.2.1) to a Single Standalone .exe file...")
     print("  Videcoding by TonNgoDoc")
     print("=" * 60)
 

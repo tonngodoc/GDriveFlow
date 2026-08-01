@@ -12,7 +12,7 @@ from gdrive_service import GDriveService, GDriveItem, DownloadCancelledException
 
 # Application Metadata
 APP_NAME = "GDrive Flow"
-APP_VERSION = "v2.2.0"
+APP_VERSION = "v2.2.1"
 DEVELOPER_NAME_VI = "Videcoding by TonNgoDoc"
 DEVELOPER_NAME_EN = "Videcoding by TonNgoDoc"
 
@@ -20,7 +20,12 @@ DEVELOPER_NAME_EN = "Videcoding by TonNgoDoc"
 CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release History)
 
 --------------------------------------------------
-📌 Phiên Bản v2.2.0 (Hiện tại)
+📌 Phiên Bản v2.2.1 (Hiện tại)
+--------------------------------------------------
+- 🎨 Loại bỏ hoàn toàn đường viền khung (border_width=0) của các dòng tệp/thư mục, chỉ giữ lại nền màu sắc phẳng tối giản, hiện đại.
+
+--------------------------------------------------
+📌 Phiên Bản v2.2.0
 --------------------------------------------------
 - 📁 Mặc định giữ thu gọn cây thư mục (Collapsed tree view by default) tránh đơ lag khi quét folder hàng ngàn tệp.
 - ⚡ Thẻ trạng thái trong danh sách chỉ hiển thị gọn gàng ('🔵 Đang tải...', '✅ Hoàn thành', '❌ Lỗi tải'), không chứa số %.
@@ -49,7 +54,12 @@ CHANGELOG_TEXT_VI = """🌊 GDrive Flow - Lịch Sử Cập Nhật (Release Hist
 CHANGELOG_TEXT_EN = """🌊 GDrive Flow - Version Release History
 
 --------------------------------------------------
-📌 Version v2.2.0 (Current)
+📌 Version v2.2.1 (Current)
+--------------------------------------------------
+- 🎨 Completely removed item frame borders (border_width=0) in tree list view, leaving clean flat background colors.
+
+--------------------------------------------------
+📌 Version v2.2.0
 --------------------------------------------------
 - 📁 Default collapsed tree view to prevent UI lag on huge Google Drive folders.
 - ⚡ Clean list badges ('🔵 Downloading...', '✅ Completed', '❌ Download Error') without percentage numbers in tree view.
@@ -1260,8 +1270,7 @@ class GDriveApp(ctk.CTk):
         row_frame = ctk.CTkFrame(
             self.scroll_tree,
             fg_color=bg_color,
-            border_width=1,
-            border_color=border_color,
+            border_width=0,
             corner_radius=4
         )
         row_frame.pack(fill="x", padx=4, pady=2)
@@ -1430,7 +1439,7 @@ class GDriveApp(ctk.CTk):
                 status_text = self.t("downloading_badge")
 
         if node.frame_widget and node.frame_widget.winfo_exists():
-            node.frame_widget.configure(fg_color=bg_color, border_color=border_color)
+            node.frame_widget.configure(fg_color=bg_color)
 
         if node.lbl_status_badge and node.lbl_status_badge.winfo_exists():
             node.lbl_status_badge.configure(
