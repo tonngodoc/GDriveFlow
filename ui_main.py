@@ -12,7 +12,7 @@ from gdrive_service import GDriveService, GDriveItem, DownloadCancelledException
 
 # Application Metadata
 APP_NAME = "GDrive Flow"
-APP_VERSION = "v1.9.0"
+APP_VERSION = "v2.0.0"
 DEVELOPER_NAME_VI = "Phát triển bởi TÔN NGỘ ĐỘC"
 DEVELOPER_NAME_EN = "Developed by TON NGO DOC"
 
@@ -22,6 +22,7 @@ TRANSLATIONS = {
         "title": "GDrive Flow",
         "developer": DEVELOPER_NAME_VI,
         "version": "Phiên bản",
+        "donate_btn": "💖 Donate",
         "report_bug": "🐛 Báo Lỗi",
         "url_label": "Link / ID Google Drive:",
         "url_placeholder": "Dán liên kết Thư Mục (Folder) hoặc Tệp (File) Google Drive...",
@@ -89,12 +90,23 @@ TRANSLATIONS = {
         "report_copy_log": "📋 Sao Chép Log Lỗi",
         "report_open_github": "🌐 Mở GitHub Issues",
         "report_copied_msg": "Đã sao chép nội dung log vào Clipboard!",
-        "report_close": "Đóng"
+        "report_close": "Đóng",
+
+        # Donate Dialog
+        "donate_title": "Ủng Hộ Tác Giả (Donate)",
+        "donate_desc": "Nếu bạn cảm thấy ứng dụng GDrive Flow hữu ích, bạn có thể mời tác giả TÔN NGỘ ĐỘC một ly cà phê qua tài khoản ngân hàng bên dưới:",
+        "donate_bank_name": "Ngân hàng:",
+        "donate_holder": "Chủ tài khoản:",
+        "donate_account": "Số TK / Nickname:",
+        "donate_copy_btn": "📋 Sao Chép Nickname STK",
+        "donate_copied_msg": "Đã sao chép nickname 'tonngodoc' vào Clipboard!",
+        "donate_close": "Đóng"
     },
     "en": {
         "title": "GDrive Flow",
         "developer": DEVELOPER_NAME_EN,
         "version": "Version",
+        "donate_btn": "💖 Donate",
         "report_bug": "🐛 Report Bug",
         "url_label": "Google Drive Link / ID:",
         "url_placeholder": "Paste Google Drive Folder or File link here...",
@@ -162,7 +174,17 @@ TRANSLATIONS = {
         "report_copy_log": "📋 Copy Error Log",
         "report_open_github": "🌐 Open GitHub Issues",
         "report_copied_msg": "Log contents copied to Clipboard!",
-        "report_close": "Close"
+        "report_close": "Close",
+
+        # Donate Dialog
+        "donate_title": "Support Developer (Donate)",
+        "donate_desc": "If you find GDrive Flow helpful, consider buying developer TON NGO DOC a coffee via bank details below:",
+        "donate_bank_name": "Bank Name:",
+        "donate_holder": "Account Holder:",
+        "donate_account": "Account Nickname:",
+        "donate_copy_btn": "📋 Copy Account Nickname",
+        "donate_copied_msg": "Account nickname 'tonngodoc' copied to Clipboard!",
+        "donate_close": "Close"
     }
 }
 
@@ -333,6 +355,19 @@ class GDriveApp(ctk.CTk):
         self.seg_lang.set("🇻🇳")
         self.seg_lang.pack(side="right")
 
+        # Donate Button
+        self.btn_donate = ctk.CTkButton(
+            title_subframe,
+            text=self.t("donate_btn"),
+            command=self._open_donate_dialog,
+            font=ctk.CTkFont(size=12, weight="bold"),
+            fg_color="#ec4899",
+            hover_color="#db2777",
+            height=28,
+            width=95
+        )
+        self.btn_donate.pack(side="right", padx=(0, 8))
+
         # Report Bug Button
         self.btn_report = ctk.CTkButton(
             title_subframe,
@@ -344,7 +379,7 @@ class GDriveApp(ctk.CTk):
             height=28,
             width=105
         )
-        self.btn_report.pack(side="right", padx=(0, 10))
+        self.btn_report.pack(side="right", padx=(0, 8))
 
         # Row 1: GDrive URL / ID input
         self.lbl_url = ctk.CTkLabel(input_frame, text=self.t("url_label"), font=ctk.CTkFont(size=13, weight="bold"), text_color="#2c3e50")
@@ -607,6 +642,104 @@ class GDriveApp(ctk.CTk):
             text_color="#f8fafc"
         )
 
+    def _open_donate_dialog(self):
+        """Opens interactive Donate modal window."""
+        dialog = ctk.CTkToplevel(self)
+        dialog.title(self.t("donate_title"))
+        dialog.geometry("520x420")
+        dialog.resizable(False, False)
+        dialog.grab_set()
+
+        # Set dialog icon if available
+        icon_path = os.path.join(os.path.dirname(__file__), "icon.ico")
+        if os.path.exists(icon_path):
+            try:
+                dialog.iconbitmap(icon_path)
+            except Exception:
+                pass
+
+        lbl_title = ctk.CTkLabel(
+            dialog,
+            text=f"💖 {self.t('donate_title')}",
+            font=ctk.CTkFont(size=17, weight="bold"),
+            text_color="#ec4899"
+        )
+        lbl_title.pack(padx=20, pady=(18, 6), anchor="w")
+
+        lbl_desc = ctk.CTkLabel(
+            dialog,
+            text=self.t("donate_desc"),
+            font=ctk.CTkFont(size=12),
+            text_color="#475569",
+            wraplength=480,
+            justify="left"
+        )
+        lbl_desc.pack(padx=20, pady=(0, 12), anchor="w")
+
+        # Bank Info Card
+        card_frame = ctk.CTkFrame(dialog, corner_radius=10, fg_color="#f8fafc", border_width=1, border_color="#cbd5e1")
+        card_frame.pack(padx=20, pady=5, fill="x")
+
+        # Row 1: Bank Name
+        r1 = ctk.CTkFrame(card_frame, fg_color="transparent")
+        r1.pack(fill="x", padx=15, pady=(12, 6))
+        ctk.CTkLabel(r1, text="🏦 " + self.t("donate_bank_name"), font=ctk.CTkFont(size=13, weight="bold"), text_color="#334155").pack(side="left")
+        ctk.CTkLabel(r1, text="TPBank (Ngân hàng Tiên Phong)", font=ctk.CTkFont(size=13, weight="bold"), text_color="#0284c7").pack(side="right")
+
+        # Row 2: Account Holder
+        r2 = ctk.CTkFrame(card_frame, fg_color="transparent")
+        r2.pack(fill="x", padx=15, pady=6)
+        ctk.CTkLabel(r2, text="👤 " + self.t("donate_holder"), font=ctk.CTkFont(size=13, weight="bold"), text_color="#334155").pack(side="left")
+        ctk.CTkLabel(r2, text="TÔN NGỘ ĐỘC", font=ctk.CTkFont(size=13, weight="bold"), text_color="#16a34a").pack(side="right")
+
+        # Row 3: Account Nickname / Number
+        r3 = ctk.CTkFrame(card_frame, fg_color="transparent")
+        r3.pack(fill="x", padx=15, pady=(6, 12))
+        ctk.CTkLabel(r3, text="💳 " + self.t("donate_account"), font=ctk.CTkFont(size=13, weight="bold"), text_color="#334155").pack(side="left")
+        ctk.CTkLabel(r3, text="tonngodoc", font=ctk.CTkFont(size=16, weight="bold"), text_color="#ec4899").pack(side="right")
+
+        # Feedback Message
+        lbl_feedback = ctk.CTkLabel(
+            dialog,
+            text="",
+            font=ctk.CTkFont(size=12, weight="bold"),
+            text_color="#16a34a"
+        )
+        lbl_feedback.pack(pady=(10, 5))
+
+        # Action Buttons
+        btn_frame = ctk.CTkFrame(dialog, fg_color="transparent")
+        btn_frame.pack(padx=20, pady=(5, 15), fill="x")
+
+        def copy_account():
+            self.clipboard_clear()
+            self.clipboard_append("tonngodoc")
+            lbl_feedback.configure(text=self.t("donate_copied_msg"))
+            self.after(3000, lambda: lbl_feedback.configure(text=""))
+
+        btn_copy = ctk.CTkButton(
+            btn_frame,
+            text=self.t("donate_copy_btn"),
+            font=ctk.CTkFont(size=13, weight="bold"),
+            command=copy_account,
+            fg_color="#0284c7",
+            hover_color="#0369a1",
+            height=36
+        )
+        btn_copy.pack(side="left", fill="x", expand=True, padx=(0, 10))
+
+        btn_close = ctk.CTkButton(
+            btn_frame,
+            text=self.t("donate_close"),
+            font=ctk.CTkFont(size=13),
+            command=dialog.destroy,
+            fg_color="#64748b",
+            hover_color="#475569",
+            width=100,
+            height=36
+        )
+        btn_close.pack(side="right")
+
     def _open_report_dialog(self):
         """Opens interactive Bug Report modal window."""
         dialog = ctk.CTkToplevel(self)
@@ -720,6 +853,7 @@ class GDriveApp(ctk.CTk):
 
         # Update labels & buttons
         self.lbl_developer.configure(text=f"• {self.t('developer')}")
+        self.btn_donate.configure(text=self.t("donate_btn"))
         self.btn_report.configure(text=self.t("report_bug"))
         self.lbl_url.configure(text=self.t("url_label"))
         self.entry_url.configure(placeholder_text=self.t("url_placeholder"))
